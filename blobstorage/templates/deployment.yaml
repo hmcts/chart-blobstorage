@@ -10,7 +10,7 @@ metadata:
     {{- ( include "labels" . ) | indent 4 }}
 spec:
   clusterServiceClassExternalName: azure-storage
-  clusterServicePlanExternalName: storage-account
+  clusterServicePlanExternalName: blob-storage-account
   parameters:
     location: {{ .Values.location }}
     alias: storage-account-{{ .Release.Name }}
@@ -44,7 +44,7 @@ metadata:
     {{- ( include "labels" $base ) | indent 4 }}
 spec:
   clusterServiceClassExternalName: azure-storage
-  clusterServicePlanExternalName: container
+  clusterServicePlanExternalName: blob-container
   parameters:
     parentAlias: storage-account-{{ $base.Release.Name }}
     containerName: {{ . }}
