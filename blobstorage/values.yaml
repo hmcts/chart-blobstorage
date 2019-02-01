@@ -1,0 +1,6 @@
+location: uksouth
+resourceGroup: someGroup
+setup:
+  containers:
+   - name: firstContainer
+   - name: secondContainer

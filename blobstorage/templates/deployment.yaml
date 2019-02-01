@@ -1,0 +1,64 @@
+---
+#
+# Service Catalog Blob storage namespace
+# https://github.com/Azure/open-service-broker-azure/blob/master/docs/modules/storage.md
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: blob-storage-service-{{ .Release.Name }}
+  labels:
+    {{- ( include "labels" . ) | indent 4 }}
+spec:
+  clusterServiceClassExternalName: azure-storage
+  clusterServicePlanExternalName: blob-storage-account
+  parameters:
+    location: {{ .Values.location }}
+    alias: blob-storage-account-{{ .Release.Name }}
+    resourceGroup: {{ required "A resource group ( .Values.resourceGroup ) is required for storage creation" .Values.resourceGroup | quote }}
+    enableNonHttpsTraffic: {{ .Values.enableNonHttpsTraffic | default "disabled" | quote }} 
+    tags:
+      app.kubernetes.io/name: {{ .Release.Name }}
+      helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: blob-storage-binding-{{ .Release.Name }}
+  labels:
+    {{- ( include "labels" . ) | indent 4 }}
+spec:
+  instanceRef:
+    name: blob-storage-service-{{ .Release.Name }}
+  secretName: blob-storage-secret-{{ .Release.Name }}
+   
+{{- if .Values.setup -}}
+  {{- if .Values.setup.containers -}}
+    {{- $base := . -}} 
+    {{- range $container := .Values.setup.containers -}}
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: blob-container-{{ $base.Release.Name }}-{{ required "All .Values.setup.containers items need a 'name' property" $container.name }}
+  labels:
+    {{- ( include "labels" $base ) | indent 4 }}
+spec:
+  clusterServiceClassExternalName: azure-storage
+  clusterServicePlanExternalName: blob-container
+  parameters:
+    parentAlias: blob-storage-account-{{ $base.Release.Name }}
+    containerName: $container.name
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: blob-container-binding-{{ $base.Release.Name }}-{{ $container.name }}
+  labels:
+    {{- (include "labels" $base) | indent 4 }}
+spec:
+  instanceRef:
+    name: blob-container-{{ $base.Release.Name }}-{{ $container.name }}
+  secretName: blob-container-secret-{{ $base.Release.Name }}-{{ $container.name }}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
