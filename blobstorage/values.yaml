@@ -2,5 +2,5 @@ location: uksouth
 resourceGroup: someGroup
 setup:
   containers:
-   - name: first-container
-   - name: second-container
+   - first-container
+   - second-container

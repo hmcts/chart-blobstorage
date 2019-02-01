@@ -12,8 +12,8 @@ We will take small PRs and small features to this chart but more complicated nee
 resourceGroup: "your application resource group"
 setup:
   containers:
-   - name: first-container
-   - name: second-container
+   - first-container
+   - second-container
 ```
 **NOTE**: at least one container and the resource group are required for the blob storage service to provision the account and container(s) required for the application.
 
@@ -27,8 +27,8 @@ blobstorage:
     resourceGroup: yyyy
     setup:
       containers:
-      - name: first-container
-      - name: second-container
+      - first-container
+      - second-container
 java:
   secrets:
     BLOB_ACCOUNT_NAME:
@@ -51,7 +51,7 @@ The following table lists the configurable parameters of the Blob Storage chart 
 | `location` | string |location of the PaaS instance of the blob storage to use | `uksouth` |
 | `resourceGroup` | string | This is the resource group required for the azure deployment |  **Required** |
 | `setup` | array |see the full description of the setup objects in [setup objects](#setupobjects)| **Required** |
-| `setup.containers.name` | `string` | The name of the container. | **Required**|
+| `setup.containers` | array | The names of the containers. | **Required**|
 | `setup.enableNonHttpsTraffic` | `string` |  Specify whether non-https traffic is enabled. | `disabled`|
 
 
@@ -62,7 +62,7 @@ Currently we support only multiple `container(s)` setup within a single blob sto
 ```yaml
 setup:
   container:
-  - name: yourContainer
+  - yourContainer
 ```
 
 ## Development and Testing
