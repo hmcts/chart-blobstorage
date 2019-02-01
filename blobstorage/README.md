@@ -32,13 +32,13 @@ blobstorage:
 java:
   secrets:
     BLOB_ACCOUNT_NAME:
-      secretRef: blob-storage-secret-${SERVICE_NAME}
+      secretRef: storage-secret-${SERVICE_NAME}
       key: storageAccountName
     BLOB_ACCESS_KEY:
-      secretRef: blob-storage-secret-${SERVICE_NAME}
+      secretRef: storage-secret-${SERVICE_NAME}
       key: accessKey
     BLOB_SERVICE_ENDPOINT:
-      secretRef: blob-storage-secret-${SERVICE_NAME}
+      secretRef: storage-secret-${SERVICE_NAME}
       key: primaryBlobServiceEndPoint
 ```
 

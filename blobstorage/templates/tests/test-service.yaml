@@ -64,12 +64,12 @@ spec:
       - name: STORAGE_ACCOUNT_NAME
         valueFrom:
           secretKeyRef:
-            name: blob-storage-secret-{{ .Release.Name }}
+            name: storage-secret-{{ .Release.Name }}
             key: storageAccountName
       - name: STORAGE_ACCESS_KEY
         valueFrom:
           secretKeyRef:
-            name: blob-storage-secret-{{ .Release.Name }}
+            name: storage-secret-{{ .Release.Name }}
             key: storageAccessKey
     command: ["sh", "-c", "/bin/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${STORAGE_ACCESS_KEY}"]
   restartPolicy: Never
