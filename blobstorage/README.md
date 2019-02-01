@@ -12,8 +12,8 @@ We will take small PRs and small features to this chart but more complicated nee
 resourceGroup: "your application resource group"
 setup:
   containers:
-   - name: yourFirstContainer
-   - name: yourSecondContainer
+   - name: first-container
+   - name: second-container
 ```
 **NOTE**: at least one container and the resource group are required for the blob storage service to provision the account and container(s) required for the application.
 
@@ -27,8 +27,8 @@ blobstorage:
     resourceGroup: yyyy
     setup:
       containers:
-      - name: yourFirstContainer
-      - name: yourSecondContainer
+      - name: first-container
+      - name: second-container
 java:
   secrets:
     BLOB_ACCOUNT_NAME:
