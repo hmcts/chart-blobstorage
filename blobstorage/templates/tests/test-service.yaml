@@ -52,7 +52,7 @@ spec:
       name: {{ .Release.Name }}-test-configmap
   containers:
   - name: {{ .Release.Name }}-test-service
-    image: busybox
+    image: alpine:3.8
     volumeMounts:
         - name: configmap-volume
           mountPath: /bin/entrypoint.sh
@@ -71,5 +71,5 @@ spec:
           secretKeyRef:
             name: storage-secret-{{ .Release.Name }}
             key: storageAccessKey
-    command: ["sh", "-c", "/bin/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${STORAGE_ACCESS_KEY}"]
+    command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /bin/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${STORAGE_ACCESS_KEY}"]
   restartPolicy: Never
