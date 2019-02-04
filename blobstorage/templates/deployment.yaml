@@ -9,14 +9,14 @@ metadata:
   labels:
     {{- ( include "labels" . ) | indent 4 }}
 spec:
-  clusterServiceClassExternalName: azure-storage
-  clusterServicePlanExternalName: blob-storage-account
+  clusterServiceClassExternalName: azure-storage-blob-storage-account
+  clusterServicePlanExternalName: account
   parameters:
     location: {{ .Values.location }}
     alias: storage-account-{{ .Release.Name }}
     resourceGroup: {{ required "A resource group ( .Values.resourceGroup ) is required for storage creation" .Values.resourceGroup | quote }}
     enableNonHttpsTraffic: {{ .Values.enableNonHttpsTraffic | default "disabled" | quote }} 
-    # It returns an error even if the documentation 
+    # It returns an error even if it is documented
     #tags:
     #  app.kubernetes.io/name: {{ .Release.Name }}
     #  helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
@@ -44,8 +44,8 @@ metadata:
   labels:
     {{- ( include "labels" $base ) | indent 4 }}
 spec:
-  clusterServiceClassExternalName: azure-storage
-  clusterServicePlanExternalName: blob-container
+  clusterServiceClassExternalName: azure-storage-blob-container
+  clusterServicePlanExternalName: container
   parameters:
     parentAlias: storage-account-{{ $base.Release.Name }}
     containerName: {{ . }}
@@ -60,6 +60,6 @@ spec:
   instanceRef:
     name: container-{{ $base.Release.Name }}-{{ . }}
   secretName: container-secret-{{ $base.Release.Name }}-{{ . }}
-    {{- end -}}
+    {{- end }}
   {{- end -}}
 {{- end -}}
