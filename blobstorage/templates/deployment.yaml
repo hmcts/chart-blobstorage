@@ -36,6 +36,7 @@ spec:
   {{- if .Values.setup.containers -}}
     {{- $base := . -}} 
     {{ range .Values.setup.containers -}}
+
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
