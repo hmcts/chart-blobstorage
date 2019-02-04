@@ -35,7 +35,7 @@ spec:
 {{- if .Values.setup -}}
   {{- if .Values.setup.containers -}}
     {{- $base := . -}} 
-    {{ range .Values.setup.containers -}}
+    {{ range .Values.setup.containers }}
 
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
@@ -61,6 +61,6 @@ spec:
   instanceRef:
     name: container-{{ $base.Release.Name }}-{{ . }}
   secretName: container-secret-{{ $base.Release.Name }}-{{ . }}
-    {{- end }}
+    {{ end }}
   {{- end -}}
 {{- end -}}
