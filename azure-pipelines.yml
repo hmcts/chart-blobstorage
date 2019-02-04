@@ -24,6 +24,7 @@ jobs:
       chartName: blobstorage
       chartReleaseName: chart-blobstorage-ci-test
       chartNamespace: chart-tests
+      helmInstallWait: "60"
 
 - job: Release
   # Make sure we have a tag to run this job
