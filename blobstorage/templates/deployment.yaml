@@ -60,6 +60,6 @@ spec:
   instanceRef:
     name: container-{{ $base.Release.Name }}-{{ . }}
   secretName: container-secret-{{ $base.Release.Name }}-{{ . }}
-    {{- end -}}
+    {{- end }}
   {{- end -}}
 {{- end -}}
