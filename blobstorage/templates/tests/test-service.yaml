@@ -6,6 +6,7 @@ metadata:
 data:
   entrypoint.sh: |-
     #!/bin/bash
+    set -x
     storage_account="$1"
     access_key="$2"
 
