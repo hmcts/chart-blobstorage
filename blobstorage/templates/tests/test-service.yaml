@@ -66,10 +66,10 @@ spec:
           secretKeyRef:
             name: storage-secret-{{ .Release.Name }}
             key: storageAccountName
-      - name: STORAGE_ACCESS_KEY
+      - name: ACCESS_KEY
         valueFrom:
           secretKeyRef:
             name: storage-secret-{{ .Release.Name }}
-            key: storageAccessKey
-    command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /bin/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${STORAGE_ACCESS_KEY}"]
+            key: accessKey
+    command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /bin/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
   restartPolicy: Never
