@@ -19,7 +19,6 @@ setup:
 
 ## Using it in your helm chart.
 To get the container(s) access key and blob service endpoint needed in your application you need to use the secrets map that is available once the storage account and container(s) are provisioned.
-To access the connection string secret for the desired queue we can use this snippet in your values.template.yaml:
 
 In the **Java** chart section under the `secrets:` section.
 ```yaml
