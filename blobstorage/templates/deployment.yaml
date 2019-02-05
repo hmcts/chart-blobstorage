@@ -17,9 +17,10 @@ spec:
     resourceGroup: {{ required "A resource group ( .Values.resourceGroup ) is required for storage creation" .Values.resourceGroup | quote }}
     enableNonHttpsTraffic: {{ .Values.enableNonHttpsTraffic | default "disabled" | quote }} 
     # It returns an error even if it is documented
-    #tags:
-    #  app.kubernetes.io/name: {{ .Release.Name }}
-    #  helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    tags:
+      app.kubernetes.io_name: {{ .Release.Name }}
+      helm.sh_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+      "Team Name": {{ required "A team name (.Values.teamName) is required" .Values.teamName }}
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
