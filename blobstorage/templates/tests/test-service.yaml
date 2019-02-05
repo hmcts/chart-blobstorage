@@ -1,0 +1,73 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-test-configmap
+data:
+  entrypoint.sh: |-
+    #!/bin/sh
+    storage_account="$1"
+    access_key="$2"
+
+    blob_store_url="blob.core.windows.net"
+    authorization="SharedKey"
+
+    request_method="GET"
+    request_date=$(TZ=GMT date "+%a, %d %h %Y %H:%M:%S %Z")
+    storage_service_version="2017-07-29"
+
+    # HTTP Request headers
+    x_ms_date_h="x-ms-date:$request_date"
+    x_ms_version_h="x-ms-version:$storage_service_version"
+
+    # Signature string
+    canonicalized_headers="${x_ms_date_h}\n${x_ms_version_h}"
+    canonicalized_resource="/${storage_account}/\ncomp:list"
+    string_to_sign="${request_method}\n\n\n\n\n\n\n\n\n\n\n\n${canonicalized_headers}\n${canonicalized_resource}"
+
+    # Authorization header with HMAC signature
+    decoded_hex_key="$(echo -n $access_key |base64 -d | xxd -p -c256 |tr -d '[:space:]')"
+    signature=$(printf "$string_to_sign" | openssl dgst -sha256 -mac HMAC -macopt "hexkey:$decoded_hex_key" -binary | base64)
+    authorization_header="Authorization: $authorization $storage_account:$signature"
+
+    httpstatuscode=$(wget -S \
+      --header "$x_ms_date_h" \
+      --header "$x_ms_version_h" \
+      --header "$authorization_header" \
+      "https://${storage_account}.${blob_store_url}/?comp=list" 2>&1 | grep HTTP/ | awk 'END{print $2}') 
+    
+    [ "$httpstatuscode" = "200" ] && exit 0 || exit 1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ .Release.Name }}-test-service"
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  volumes:
+    - name: configmap-volume
+      configMap:
+        defaultMode: 0755
+        name: {{ .Release.Name }}-test-configmap
+  containers:
+    - name: {{ .Release.Name }}-test-service
+      image: alpine:3.8
+      volumeMounts:
+        - name: configmap-volume
+          mountPath: /entrypoint
+      env:
+        - name: SERVICE_NAME
+          value: {{ .Release.Name }}
+        - name: STORAGE_ACCOUNT_NAME
+          valueFrom:
+            secretKeyRef:
+              name: storage-secret-{{ .Release.Name }}
+              key: storageAccountName
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: storage-secret-{{ .Release.Name }}
+              key: accessKey
+      command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /entrypoint/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
+  restartPolicy: Never

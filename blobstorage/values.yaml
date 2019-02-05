@@ -1,0 +1,6 @@
+location: uksouth
+resourceGroup: 
+teamName: 
+setup:
+  containers:
+   - container
