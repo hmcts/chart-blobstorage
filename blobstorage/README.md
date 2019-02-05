@@ -47,7 +47,7 @@ The following table lists the configurable parameters of the Blob Storage chart 
 
 | Parameter      | Type | Description | Default |
 | -------------- | ---- | ----------- | ------- |
-| `location` | string |location of the PaaS instance of the blob storage to use | `uksouth` |
+| `location` | string | location of the PaaS instance of the blob storage to use | `uksouth` |
 | `resourceGroup` | string | This is the resource group required for the azure deployment |  **Required** |
 | `setup` | array |see the full description of the setup objects in [setup objects](#setupobjects)| **Required** |
 | `setup.containers` | array | The names of the containers. | **Required**|
