@@ -16,7 +16,6 @@ spec:
     alias: storage-account-{{ .Release.Name }}
     resourceGroup: {{ required "A resource group ( .Values.resourceGroup ) is required for storage creation" .Values.resourceGroup | quote }}
     enableNonHttpsTraffic: {{ .Values.enableNonHttpsTraffic | default "disabled" | quote }} 
-    # It returns an error even if it is documented
     tags:
       app.kubernetes.io_name: {{ .Release.Name }}
       helm.sh_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
