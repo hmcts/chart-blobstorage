@@ -73,7 +73,7 @@ Default configuration (e.g. default image and ingress host) is setup for sandbox
 - To execute an end-to-end build, deploy and test run `make`.
 - to clean up deployed releases, charts, test pods and local charts, run `make clean`
 
-`helm test` will deploy a busybox container alongside the release which performs a simple HTTP request against the service health endpoint. If it doesn't return `HTTP 200` the test will fail. **NOTE:** it does NOT run with `--cleanup` so the test pod will be available for inspection.
+`helm test` will deploy a busybox container alongside the release which performs a simple HTTP "list containers" request against the blobstorage account endpoint. If it doesn't return `HTTP 200` the test will fail. **NOTE:** it does NOT run with `--cleanup` so the test pod will be available for inspection.
 
 ## Azure DevOps Builds
 
