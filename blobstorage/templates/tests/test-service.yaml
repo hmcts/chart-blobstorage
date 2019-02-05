@@ -5,8 +5,7 @@ metadata:
   name: {{ .Release.Name }}-test-configmap
 data:
   entrypoint.sh: |-
-    #!/bin/bash
-    set -x
+    #!/bin/sh
     storage_account="$1"
     access_key="$2"
 
@@ -23,19 +22,19 @@ data:
 
     # Signature string
     canonicalized_headers="${x_ms_date_h}\n${x_ms_version_h}"
-    canonicalized_resource="/${storage_account}/"
-    string_to_sign="${request_method}\n\n\n\n\n\n\n\n\n\n\n\n${canonicalized_headers}\n${canonicalized_resource}\ncomp:list"
+    canonicalized_resource="/${storage_account}/\ncomp:list"
+    string_to_sign="${request_method}\n\n\n\n\n\n\n\n\n\n\n\n${canonicalized_headers}\n${canonicalized_resource}"
 
     # Authorization header with HMAC signature
-    decoded_hex_key="$(echo -n $access_key | xxd -p -c256)"
-    signature=$(echo -n "$string_to_sign" | openssl dgst -sha256 -mac HMAC -macopt "hexkey:$decoded_hex_key" -binary | sed 's/^.*= //' | base64 -w0)
+    decoded_hex_key="$(echo -n $access_key |base64 -d | xxd -p -c256 |tr -d '[:space:]')"
+    signature=$(printf "$string_to_sign" | openssl dgst -sha256 -mac HMAC -macopt "hexkey:$decoded_hex_key" -binary | base64)
     authorization_header="Authorization: $authorization $storage_account:$signature"
 
     httpstatuscode=$(wget -S \
       --header "$x_ms_date_h" \
       --header "$x_ms_version_h" \
       --header "$authorization_header" \
-      "https://${storage_account}.${blob_store_url}/comp=list" 2>&1 | grep HTTP/ | awk 'END{print $2}') 
+      "https://${storage_account}.${blob_store_url}/?comp=list" 2>&1 | grep HTTP/ | awk 'END{print $2}') 
     
     [ "$httpstatuscode" = "200" ] && exit 0 || exit 1
 ---
@@ -47,30 +46,28 @@ metadata:
     "helm.sh/hook": test-success
 spec:
   volumes:
-  - name: configmap-volume
-    configMap:
-      defaultMode: 0700
-      name: {{ .Release.Name }}-test-configmap
+    - name: configmap-volume
+      configMap:
+        defaultMode: 0755
+        name: {{ .Release.Name }}-test-configmap
   containers:
-  - name: {{ .Release.Name }}-test-service
-    image: alpine:3.8
-    volumeMounts:
+    - name: {{ .Release.Name }}-test-service
+      image: alpine:3.8
+      volumeMounts:
         - name: configmap-volume
-          mountPath: /bin/entrypoint.sh
-          readOnly: true
-          subPath: entrypoint.sh
-    env:
-      - name: SERVICE_NAME
-        value: {{ .Release.Name }}
-      - name: STORAGE_ACCOUNT_NAME
-        valueFrom:
-          secretKeyRef:
-            name: storage-secret-{{ .Release.Name }}
-            key: storageAccountName
-      - name: ACCESS_KEY
-        valueFrom:
-          secretKeyRef:
-            name: storage-secret-{{ .Release.Name }}
-            key: accessKey
-    command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /bin/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
+          mountPath: /entrypoint
+      env:
+        - name: SERVICE_NAME
+          value: {{ .Release.Name }}
+        - name: STORAGE_ACCOUNT_NAME
+          valueFrom:
+            secretKeyRef:
+              name: storage-secret-{{ .Release.Name }}
+              key: storageAccountName
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: storage-secret-{{ .Release.Name }}
+              key: accessKey
+      command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /entrypoint/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
   restartPolicy: Never
