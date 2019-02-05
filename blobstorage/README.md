@@ -60,7 +60,7 @@ Currently we support only multiple `container(s)` setup within a single blob sto
  The container object definition is:
 ```yaml
 setup:
-  container:
+  containers:
   - yourContainer
 ```
 
