@@ -1,5 +1,5 @@
-
-environment:
-  REFORM_TEAM: cnp
-  REFORM_SERVICE_NAME: rhubarb-backend
-  REFORM_ENVIRONMENT: preview
+resourceGroup: chart-blobstorage-test
+setup:
+  containers:
+   - first-container
+   - second-container

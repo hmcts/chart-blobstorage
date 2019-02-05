@@ -1,6 +1,5 @@
 location: uksouth
-resourceGroup: someGroup
+resourceGroup: 
 setup:
   containers:
-   - first-container
-   - second-container
+   - container
