@@ -10,6 +10,7 @@ We will take small PRs and small features to this chart but more complicated nee
 
 ```yaml
 resourceGroup: "your application resource group"
+teamName: yourTeam
 setup:
   containers:
    - first-container
@@ -24,6 +25,7 @@ In the **Java** chart section under the `secrets:` section.
 ```yaml
 blobstorage:
     resourceGroup: yyyy
+    teamName: myTeam
     setup:
       containers:
       - first-container
@@ -48,7 +50,8 @@ The following table lists the configurable parameters of the Blob Storage chart 
 | Parameter      | Type | Description | Default |
 | -------------- | ---- | ----------- | ------- |
 | `location` | string | location of the PaaS instance of the blob storage to use | `uksouth` |
-| `resourceGroup` | string | This is the resource group required for the azure deployment |  **Required** |
+| `resourceGroup` | string | resource group required for the Azure deployment |  **Required** |
+| `teamName` | string | team name used to create related Azure tag |  **Required** |
 | `setup` | array | see the full description of the setup objects in [setup objects](#setupobjects)| **Required** |
 | `setup.containers` | array | The names of the containers. | **Required**|
 | `setup.enableNonHttpsTraffic` | `string` |  Specify whether non-https traffic is enabled. | `disabled`|
