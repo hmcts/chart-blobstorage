@@ -1,6 +1,7 @@
 location: uksouth
 resourceGroup: 
-teamName: 
+teamName:
+secretNameSuffix:
 setup:
   containers:
    - container
