@@ -11,7 +11,7 @@ We will take small PRs and small features to this chart but more complicated nee
 ```yaml
 resourceGroup: "your application resource group"
 teamName: yourTeam
-secretNameSuffix: "Suffix to be added to secrets added by chart"
+secretNameSuffix: "your-suffix"
 setup:
   containers:
    - first-container
