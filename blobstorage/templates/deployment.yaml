@@ -30,7 +30,7 @@ metadata:
 spec:
   instanceRef:
     name: storage-service-{{ .Release.Name }}
-  secretName: storage-secret-{{ .Release.Name }}
+  secretName: storage-secret-{{ template "secretNameSuffix" . }}
    
 {{- if .Values.setup -}}
   {{- if .Values.setup.containers -}}
@@ -60,7 +60,7 @@ metadata:
 spec:
   instanceRef:
     name: container-{{ $base.Release.Name }}-{{ . }}
-  secretName: container-secret-{{ $base.Release.Name }}-{{ . }}
+  secretName: container-secret-{{ template "secretNameSuffix" $base }}-{{ . }}
     {{ end }}
   {{- end -}}
 {{- end -}}

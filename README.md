@@ -11,6 +11,7 @@ We will take small PRs and small features to this chart but more complicated nee
 ```yaml
 resourceGroup: "your application resource group"
 teamName: yourTeam
+secretNameSuffix: "your-suffix"
 setup:
   containers:
    - first-container
@@ -52,6 +53,7 @@ The following table lists the configurable parameters of the Blob Storage chart 
 | `location` | string | location of the PaaS instance of the blob storage to use | `uksouth` |
 | `resourceGroup` | string | resource group required for the Azure deployment |  **Required** |
 | `teamName` | string | team name used to create related Azure tag |  **Required** |
+| `secretNameSuffix`            | string   | Suffix for secret names added by chart.By default release name is used as suffix| **Optional** |
 | `setup` | array | see the full description of the setup objects in [setup objects](#setupobjects)| **Required** |
 | `setup.containers` | array | The names of the containers. | **Required**|
 | `setup.enableNonHttpsTraffic` | `string` |  Specify whether non-https traffic is enabled. | `disabled`|
