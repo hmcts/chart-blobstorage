@@ -34,13 +34,36 @@ blobstorage:
 java:
   secrets:
     BLOB_ACCOUNT_NAME:
-      secretRef: storage-secret-${SERVICE_NAME}
+      secretRef: storage-secret-{{ .Release.Name }}
       key: storageAccountName
     BLOB_ACCESS_KEY:
-      secretRef: storage-secret-${SERVICE_NAME}
+      secretRef: storage-secret-{{ .Release.Name }}
       key: accessKey
     BLOB_SERVICE_ENDPOINT:
-      secretRef: storage-secret-${SERVICE_NAME}
+      secretRef: storage-secret-{{ .Release.Name }}
+      key: primaryBlobServiceEndPoint
+```
+If using releaseNameOverride, secretRef will be updated as in below
+
+```yaml
+releaseNameOverride: example-release-name
+blobstorage:
+    resourceGroup: yyyy
+    teamName: myTeam
+    setup:
+      containers:
+      - first-container
+      - second-container
+java:
+  secrets:
+    BLOB_ACCOUNT_NAME:
+      secretRef: storage-secret-example-release-name
+      key: storageAccountName
+    BLOB_ACCESS_KEY:
+      secretRef: storage-secret-example-release-name
+      key: accessKey
+    BLOB_SERVICE_ENDPOINT:
+      secretRef: storage-secret-example-release-name
       key: primaryBlobServiceEndPoint
 ```
 
@@ -50,10 +73,10 @@ The following table lists the configurable parameters of the Blob Storage chart 
 
 | Parameter      | Type | Description | Default |
 | -------------- | ---- | ----------- | ------- |
+| `releaseNameOverride`          | Will override the resource name - It supports templating, example:`releaseNameOverride: {{ .Release.Name }}-my-custom-name`      | `Release.Name-Chart.Name`     |
 | `location` | string | location of the PaaS instance of the blob storage to use | `uksouth` |
 | `resourceGroup` | string | resource group required for the Azure deployment |  **Required** |
 | `teamName` | string | team name used to create related Azure tag |  **Required** |
-| `secretNameSuffix`            | string   | Suffix for secret names added by chart.By default release name is used as suffix| **Optional** |
 | `setup` | array | see the full description of the setup objects in [setup objects](#setupobjects)| **Required** |
 | `setup.containers` | array | The names of the containers. | **Required**|
 | `setup.enableNonHttpsTraffic` | `string` |  Specify whether non-https traffic is enabled. | `disabled`|

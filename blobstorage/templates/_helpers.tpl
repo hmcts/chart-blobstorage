@@ -7,10 +7,11 @@ helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/instance: {{ .Release.Name -}}
 {{- end -}}
-{{- define "secretNameSuffix" -}}
-{{- if .Values.secretNameSuffix -}}
-{{- .Values.secretNameSuffix -}}
+
+{{- define "hmcts.releaseName" -}}
+{{- if .Values.releaseNameOverride -}}
+{{- tpl .Values.releaseNameOverride $ | trunc 53 | trimSuffix "-" -}}
 {{- else -}}
-{{- .Release.Name -}}
+{{- .Release.Name | trunc 53 -}}
 {{- end -}}
 {{- end -}}
