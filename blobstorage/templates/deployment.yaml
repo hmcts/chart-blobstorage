@@ -7,7 +7,7 @@ kind: ServiceInstance
 metadata:
   name: storage-service-{{ template "hmcts.blobstorage.releaseName" . }}
   labels:
-    {{- ( include "labels" . ) | indent 4 }}
+    {{- ( include hmcts.blobstorage.labels . ) | indent 4 }}
 spec:
   clusterServiceClassExternalName: azure-storage-blob-storage-account
   clusterServicePlanExternalName: account
@@ -26,7 +26,7 @@ kind: ServiceBinding
 metadata:
   name: storage-binding-{{ template "hmcts.blobstorage.releaseName" . }}
   labels:
-    {{- ( include "labels" . ) | indent 4 }}
+    {{- ( include hmcts.blobstorage.labels . ) | indent 4 }}
 spec:
   instanceRef:
     name: storage-service-{{ template "hmcts.blobstorage.releaseName" . }}
@@ -43,7 +43,7 @@ kind: ServiceInstance
 metadata:
   name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ required "All .Values.setup.containers items need a 'name' property" . }}
   labels:
-    {{- ( include "labels" $base ) | indent 4 }}
+    {{- ( include hmcts.blobstorage.labels $base ) | indent 4 }}
 spec:
   clusterServiceClassExternalName: azure-storage-blob-container
   clusterServicePlanExternalName: container
@@ -56,7 +56,7 @@ kind: ServiceBinding
 metadata:
   name: container-binding-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
   labels:
-    {{- (include "labels" $base) | indent 4 }}
+    {{- (include hmcts.blobstorage.labels $base) | indent 4 }}
 spec:
   instanceRef:
     name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
