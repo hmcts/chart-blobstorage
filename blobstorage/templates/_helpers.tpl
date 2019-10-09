@@ -1,7 +1,7 @@
 {{/*
 All the common labels needed for the labels sections of the definitions.
 */}}
-{{- define hmcts.blobstorage.labels }}
+{{- define "hmcts.blobstorage.labels" }}
 app.kubernetes.io/name: {{ template "hmcts.blobstorage.releaseName" . }}
 helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
