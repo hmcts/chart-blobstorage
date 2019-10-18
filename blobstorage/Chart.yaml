@@ -1,7 +1,7 @@
 apiVersion: v1
 description: A Helm chart to access Azure blob storage
 name: blobstorage
-version: 0.2.0
+version: 0.2.1
 icon: https://github.com/hmcts/chart-blobstorage/raw/master/images/storage_icon.png
 keywords:
 - azure
