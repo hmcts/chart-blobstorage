@@ -1,5 +1,6 @@
 resourceGroup: chart-blobstorage-test
-teamName: "Software Engineering" 
+teamName: "Software Engineering"
+applicationName: "core"
 setup:
   containers:
    - first-container
