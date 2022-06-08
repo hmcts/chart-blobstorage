@@ -1,5 +1,9 @@
 resourceGroup: chart-blobstorage-test
-teamName: "Software Engineering" 
+teamName: "Software Engineering"
+applicationName: "core"
+builtFrom: "https://github.com/hmcts/chart-blobstorage"
+businessArea: "CFT"
+environment: "development"
 setup:
   containers:
    - first-container
