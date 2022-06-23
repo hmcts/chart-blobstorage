@@ -1,10 +1,11 @@
 location: uksouth
-resourceGroup: 
-teamName:
-applicationName:
-builtFrom:
-businessArea:
-environment:
+resourceGroup:
+tags:
+  teamName:
+  applicationName:
+  builtFrom:
+  businessArea:
+  environment:
 secretNameSuffix:
 setup:
   containers:

@@ -1,3 +1,5 @@
+{{- $globals := .Values.global | default dict -}}
+{{- $tags := $globals.tags | default dict -}}
 ---
 #
 # Service Catalog Blob storage namespace
@@ -19,11 +21,11 @@ spec:
     tags:
       app.kubernetes.io_name: {{ template "hmcts.blobstorage.releaseName" . }}
       helm.sh_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-      "Team Name": {{ required "A team name (.Values.teamName) is required" .Values.teamName }}
-      application: {{ required "Application tag (.Values.applicationName) is required" .Values.applicationName }}
-      builtFrom: {{ required "Built from tag (.Values.builtFrom) is required" .Values.builtFrom }}
-      businessArea: {{ required "Business area (.Values.builtFrom) is required" .Values.builtFrom }}
-      environment: {{ required "Environment tag (.Values.builtFrom) is required" .Values.builtFrom }}
+      "Team Name": {{ required "A team name (.Values.tags.teamName) is required" (.Values.tags.teamName | default $tags.teamName) }}
+      "application": {{ required "An application tag name (.Values.tags.applicationName) is required"  (.Values.tags.applicationName | default $tags.applicationName) }}
+      "builtFrom": {{ required "Repo built from (.Values.tags.builtFrom) is required" (.Values.tags.builtFrom | default $tags.builtFrom) }}
+      "businessArea": {{ required "Business Area name (.Values.tags.businessArea) is required" (.Values.tags.businessArea | default $tags.businessArea) }}
+      "environment": {{ required "Environment name (.Values.tags.environment) is required" (.Values.tags.environment | default $tags.environment) }}
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding

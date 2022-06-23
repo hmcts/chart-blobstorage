@@ -10,11 +10,6 @@ We will take small PRs and small features to this chart but more complicated nee
 
 ```yaml
 resourceGroup: "your application resource group"
-teamName: yourTeam
-applicationName: myApplicationTag
-builtFrom: "https://github.com/hmcts/my-app-repo"
-environment: development
-businessArea: CFT
 secretNameSuffix: "your-suffix"
 setup:
   containers:
@@ -30,11 +25,6 @@ In the **Java** chart section under the `secrets:` section.
 ```yaml
 blobstorage:
     resourceGroup: yyyy
-    teamName: myTeam
-    applicationName: myApplicationTag
-    builtFrom: "https://github.com/hmcts/my-app-repo"
-    environment: development
-    businessArea: CFT
     setup:
       containers:
       - first-container
@@ -57,11 +47,6 @@ If using releaseNameOverride, secretRef will be updated as in below
 releaseNameOverride: example-release-name
 blobstorage:
     resourceGroup: yyyy
-    teamName: myTeam
-    applicationName: myApplicationTag
-    builtFrom: "https://github.com/hmcts/my-app-repo"
-    environment: development
-    businessArea: CFT
     setup:
       containers:
       - first-container
@@ -88,14 +73,14 @@ The following table lists the configurable parameters of the Blob Storage chart 
 | `releaseNameOverride`          | Will override the resource name - It supports templating, example:`releaseNameOverride: {{ .Release.Name }}-my-custom-name`      | `Release.Name-Chart.Name`     |
 | `location` | string | location of the PaaS instance of the blob storage to use | `uksouth` |
 | `resourceGroup` | string | resource group required for the Azure deployment |  **Required** |
-| `teamName` | string | team name used to create related Azure tag |  **Required** |
-| `applicationName` | string | application name used to create necessary Azure tag |  **Required** |
-| `builtFrom` | string | built from used to create necessary Azure tag |  **Required** |
-| `businessArea` | string | business area used to create necessary Azure tag |  **Required** |
-| `environment` | string | environment used to create necessary Azure tag |  **Required** |
 | `setup` | array | see the full description of the setup objects in [setup objects](#setupobjects)| **Required** |
 | `setup.containers` | array | The names of the containers. | **Required**|
 | `setup.enableNonHttpsTraffic` | `string` |  Specify whether non-https traffic is enabled. | `disabled`|
+| `tags.teamName`                   | string | team name used to create related Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                                        | **Required if not set through `global.`** |
+| `tags.applicationName`            | string | application name used to create necessary Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                               | **Required if not set through `global.`** |
+| `tags.builtFrom`                  | string | built from used to create necessary Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                                     | **Required if not set through `global.`** |
+| `tags.businessArea`               | string | business area used to create necessary Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                                  | **Required if not set through `global.`** |
+| `tags.environment`                | string | environment used to create necessary Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                                    | **Required if not set through `global.`**                          |
 
 
 ## Setup Objects
