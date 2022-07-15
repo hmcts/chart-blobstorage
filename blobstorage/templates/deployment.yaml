@@ -4,7 +4,7 @@
 #
 # Service Catalog Blob storage namespace
 # https://github.com/Azure/open-service-broker-azure/blob/master/docs/modules/storage.md
-apiVersion: servicecatalog.k8s.io/v1beta1
+apiVersion: servicecatalog.k8s.io/v1
 kind: ServiceInstance
 metadata:
   name: storage-service-{{ template "hmcts.blobstorage.releaseName" . }}
@@ -27,7 +27,7 @@ spec:
       "businessArea": {{ required "Business Area name (.Values.tags.businessArea) is required" (.Values.tags.businessArea | default $tags.businessArea) }}
       "environment": {{ required "Environment name (.Values.tags.environment) is required" (.Values.tags.environment | default $tags.environment) }}
 ---
-apiVersion: servicecatalog.k8s.io/v1beta1
+apiVersion: servicecatalog.k8s.io/v1
 kind: ServiceBinding
 metadata:
   name: storage-binding-{{ template "hmcts.blobstorage.releaseName" . }}
@@ -44,7 +44,7 @@ spec:
     {{ range .Values.setup.containers }}
 
 ---
-apiVersion: servicecatalog.k8s.io/v1beta1
+apiVersion: servicecatalog.k8s.io/v1
 kind: ServiceInstance
 metadata:
   name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ required "All .Values.setup.containers items need a 'name' property" . }}
@@ -57,7 +57,7 @@ spec:
     parentAlias: storage-account-{{ template "hmcts.blobstorage.releaseName" $base }}
     containerName: {{ . }}
 ---
-apiVersion: servicecatalog.k8s.io/v1beta1
+apiVersion: servicecatalog.k8s.io/v1
 kind: ServiceBinding
 metadata:
   name: container-binding-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
