@@ -6,7 +6,9 @@ metadata:
 data:
   entrypoint.sh: |-
     #!/bin/sh
-    storage_account="$1"
+    storage_url="$1"
+    storage_trim=${storage_url##https://}
+    storage_account=${storage_trim%.blob.core.windows.net/}
     access_key="$2"
 
     blob_store_url="blob.core.windows.net"
