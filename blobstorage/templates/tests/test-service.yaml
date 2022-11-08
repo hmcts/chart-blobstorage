@@ -63,11 +63,11 @@ spec:
           valueFrom:
             secretKeyRef:
               name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
-              key: storageAccountName
+              key: blobEndpoint
         - name: ACCESS_KEY
           valueFrom:
             secretKeyRef:
               name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
-              key: accessKey
+              key: key1
       command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /entrypoint/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
   restartPolicy: Never
