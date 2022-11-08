@@ -1,0 +1,13 @@
+location: uksouth
+resourceGroup: aso-sample-rg
+tags:
+  teamName: ""
+  applicationName: ""
+  builtFrom: ""
+  businessArea: ""
+  environment: ""
+secretNameSuffix:
+setup:
+  containers:
+   - container1
+   - container2

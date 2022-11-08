@@ -1,4 +1,4 @@
-resourceGroup: chart-blobstorage-test
+resourceGroup: aso-sample-rg
 tags:
   teamName: ""
   applicationName: ""
