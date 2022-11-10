@@ -6,7 +6,9 @@ metadata:
 data:
   entrypoint.sh: |-
     #!/bin/sh
-    storage_account="$1"
+    storage_url="$1"
+    storage_trim=${storage_url##https://}
+    storage_account=${storage_trim%.blob.core.windows.net/}
     access_key="$2"
 
     blob_store_url="blob.core.windows.net"
@@ -63,11 +65,11 @@ spec:
           valueFrom:
             secretKeyRef:
               name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
-              key: storageAccountName
+              key: blobEndpoint
         - name: ACCESS_KEY
           valueFrom:
             secretKeyRef:
               name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
-              key: accessKey
+              key: key1
       command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /entrypoint/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
   restartPolicy: Never

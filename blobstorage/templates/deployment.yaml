@@ -1,72 +1,58 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
 ---
-#
-# Service Catalog Blob storage namespace
-# https://github.com/Azure/open-service-broker-azure/blob/master/docs/modules/storage.md
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
+apiVersion: storage.azure.com/v1beta20210401
+kind: StorageAccount
 metadata:
-  name: storage-service-{{ template "hmcts.blobstorage.releaseName" . }}
-  labels:
-    {{- ( include "hmcts.blobstorage.labels" . ) | indent 4 }}
-spec:
-  clusterServiceClassExternalName: azure-storage-blob-storage-account
-  clusterServicePlanExternalName: account
-  parameters:
-    location: {{ .Values.location }}
-    alias: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
-    resourceGroup: {{ required "A resource group ( .Values.resourceGroup ) is required for storage creation" .Values.resourceGroup | quote }}
-    enableNonHttpsTraffic: {{ .Values.enableNonHttpsTraffic | default "disabled" | quote }}
-    tags:
-      app.kubernetes.io_name: {{ template "hmcts.blobstorage.releaseName" . }}
-      helm.sh_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-      "Team Name": {{ required "A team name (.Values.tags.teamName) is required" (.Values.tags.teamName | default $tags.teamName) }}
-      "application": {{ required "An application tag name (.Values.tags.applicationName) is required"  (.Values.tags.applicationName | default $tags.applicationName) }}
-      "builtFrom": {{ required "Repo built from (.Values.tags.builtFrom) is required" (.Values.tags.builtFrom | default $tags.builtFrom) }}
-      "businessArea": {{ required "Business Area name (.Values.tags.businessArea) is required" (.Values.tags.businessArea | default $tags.businessArea) }}
-      "environment": {{ required "Environment name (.Values.tags.environment) is required" (.Values.tags.environment | default $tags.environment) }}
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceBinding
-metadata:
-  name: storage-binding-{{ template "hmcts.blobstorage.releaseName" . }}
-  labels:
-    {{- ( include "hmcts.blobstorage.labels" . ) | indent 4 }}
-spec:
-  instanceRef:
-    name: storage-service-{{ template "hmcts.blobstorage.releaseName" . }}
-  secretName: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+  name: storage{{ template "hmcts.blobstorage.releaseName" . }}
 
-{{- if .Values.setup -}}
-  {{- if .Values.setup.containers -}}
-    {{- $base := . -}}
-    {{ range .Values.setup.containers }}
+spec:
+  location:  {{ .Values.location }}
+  kind: BlobStorage
+  sku:
+    name: Standard_LRS
+  owner:
+    name: {{ required "A resource group ( .Values.resourceGroup ) is required for storage creation" .Values.resourceGroup | quote }}
+  accessTier: Hot
+  tags:
+    app.kubernetes.io_name: {{ template "hmcts.blobstorage.releaseName" . }}
+    helm.sh_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    application: {{ required "An application tag name (.Values.tags.applicationName) is required"  (.Values.tags.applicationName | default $tags.applicationName) }}
+    builtFrom: {{ required "Repo built from (.Values.tags.builtFrom) is required" (.Values.tags.builtFrom | default $tags.builtFrom) }}
+    businessArea: {{ required "Business Area name (.Values.tags.businessArea) is required" (.Values.tags.businessArea | default $tags.businessArea) }}
+    environment: {{ required "Environment name (.Values.tags.environment) is required" (.Values.tags.environment | default $tags.environment) }}
+  # Optional: Save the keys for the storage account into a Kubernetes secret
+  operatorSpec:
+    secrets:
+      key1:
+        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        key: key1
+      key2:
+        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        key: key2
+      blobEndpoint:
+        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        key: blobEndpoint
+  # supportsHttpsTrafficOnly: true
+---
+apiVersion: storage.azure.com/v1beta20210401
+kind: StorageAccountsBlobService
+metadata:
+  name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" . }}
 
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ required "All .Values.setup.containers items need a 'name' property" . }}
-  labels:
-    {{- ( include "hmcts.blobstorage.labels" $base ) | indent 4 }}
 spec:
-  clusterServiceClassExternalName: azure-storage-blob-container
-  clusterServicePlanExternalName: container
-  parameters:
-    parentAlias: storage-account-{{ template "hmcts.blobstorage.releaseName" $base }}
-    containerName: {{ . }}
+  owner:
+    name: storage{{ template "hmcts.blobstorage.releaseName" . }}
+
+
+{{- range .Values.setup.containers }}
 ---
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceBinding
+apiVersion: storage.azure.com/v1beta20210401
+kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: container-binding-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
-  labels:
-    {{- (include "hmcts.blobstorage.labels" $base) | indent 4 }}
+  name: {{ . }}{{ template "hmcts.blobstorage.releaseName" $ }}
+
 spec:
-  instanceRef:
-    name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
-  secretName: container-secret-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
-    {{ end }}
-  {{- end -}}
-{{- end -}}
+  owner:
+    name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
+{{- end }}
