@@ -4,7 +4,7 @@
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
-  name: {{randAlphaNum 24 | nospace }}
+  name: {{randAlphaNum 20 | lower | nospace }}
 
 spec:
   location:  {{ .Values.location }}
