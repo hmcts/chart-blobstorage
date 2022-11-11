@@ -4,7 +4,7 @@
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
-  name: storage{{ template "hmcts.blobstorage.releaseName" . }}
+  name: {{randAlphaNum 24 | nospace }}
 
 spec:
   location:  {{ .Values.location }}
