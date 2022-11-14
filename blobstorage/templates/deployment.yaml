@@ -1,10 +1,11 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
+{{- $stgname := randAlphaNum 20 | lower | nospace -}}
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
-  name: {{randAlphaNum 20 | lower | nospace }}
+  name: {{ $stgname }}
 
 spec:
   location:  {{ .Values.location }}
@@ -42,7 +43,7 @@ metadata:
 
 spec:
   owner:
-    name: storage{{ template "hmcts.blobstorage.releaseName" . }}
+    name: {{ $stgname }}
 
 
 {{- range .Values.setup.containers }}
