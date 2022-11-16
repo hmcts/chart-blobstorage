@@ -34,7 +34,7 @@ spec:
       blobEndpoint:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
         key: blobEndpoint
-  # supportsHttpsTrafficOnly: true
+  supportsHttpsTrafficOnly: false
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobService
