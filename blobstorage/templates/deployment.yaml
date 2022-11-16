@@ -26,20 +26,20 @@ spec:
   operatorSpec:
     secrets:
       key1:
-        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        name: storage-secret-{{ $stgname }}
         key: key1
       key2:
-        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        name: storage-secret-{{ $stgname }}
         key: key2
       blobEndpoint:
-        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        name: storage-secret-{{ $stgname }}
         key: blobEndpoint
   supportsHttpsTrafficOnly: false
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobService
 metadata:
-  name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" . }}
+  name: storage-blobservice-{{ $stgname }}
 
 spec:
   owner:
@@ -51,9 +51,9 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: {{ . }}{{ template "hmcts.blobstorage.releaseName" $ }}
+  name: {{ . }}
 
 spec:
   owner:
-    name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
+    name: storage-blobservice-{{ $stgname }}
 {{- end }}
