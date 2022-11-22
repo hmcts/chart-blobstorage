@@ -59,3 +59,15 @@ spec:
     name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
 {{- end }}
 
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    release: {{ template "hmcts.blobstorage.releaseName" . }}
+type: Opaque
+data:
+  storage_account_name: {{ $stgname | b64enc | quote }}
