@@ -2,7 +2,7 @@
 {{- $tags := $globals.tags | default dict -}}
 {{- $stgname := randAlphaNum 20 | lower | nospace -}}
 ---
-apiVersion: storage.azure.com/v1beta20210401
+apiVersion: storage.azure.com/v1alpha1api20210401
 kind: StorageAccount
 metadata:
   name: {{ $stgname }}
@@ -35,6 +35,7 @@ spec:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
         key: blobEndpoint
   supportsHttpsTrafficOnly: false
+
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobService
@@ -57,3 +58,4 @@ spec:
   owner:
     name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
 {{- end }}
+
