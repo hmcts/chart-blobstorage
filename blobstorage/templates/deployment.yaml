@@ -2,7 +2,7 @@
 {{- $tags := $globals.tags | default dict -}}
 {{- $stgname := randAlphaNum 20 | lower | nospace -}}
 ---
-apiVersion: storage.azure.com/v1alpha1api20210401
+apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
   name: {{ $stgname }}
@@ -52,7 +52,7 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: {{ . }}{{ template "hmcts.blobstorage.releaseName" $ }}
+  name: {{ . }}
 
 spec:
   owner:
