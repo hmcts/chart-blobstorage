@@ -6,7 +6,6 @@ apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
   name: {{ $stgname }}
-
 spec:
   location:  {{ .Values.location }}
   kind: BlobStorage
@@ -27,7 +26,7 @@ spec:
     secrets:
       key1:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
-        key: key1
+        key: accessKey
       key2:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
         key: key2
@@ -41,7 +40,6 @@ apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobService
 metadata:
   name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" . }}
-
 spec:
   owner:
     name: {{ $stgname }}
@@ -53,7 +51,6 @@ apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
   name: {{ . }}
-
 spec:
   owner:
     name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
