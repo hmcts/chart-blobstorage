@@ -1,11 +1,11 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
+{{- $stgname := randAlphaNum 20 | lower | nospace -}}
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
-  name: storage{{ template "hmcts.blobstorage.releaseName" . }}
-
+  name: {{ $stgname }}
 spec:
   location:  {{ .Values.location }}
   kind: BlobStorage
@@ -26,23 +26,23 @@ spec:
     secrets:
       key1:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
-        key: key1
+        key: accessKey
       key2:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
         key: key2
       blobEndpoint:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
         key: blobEndpoint
-  # supportsHttpsTrafficOnly: true
+  supportsHttpsTrafficOnly: false
+
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobService
 metadata:
   name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" . }}
-
 spec:
   owner:
-    name: storage{{ template "hmcts.blobstorage.releaseName" . }}
+    name: {{ $stgname }}
 
 
 {{- range .Values.setup.containers }}
@@ -50,9 +50,21 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: {{ . }}{{ template "hmcts.blobstorage.releaseName" $ }}
-
+  name: {{ . }}
 spec:
   owner:
     name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
 {{- end }}
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    release: {{ template "hmcts.blobstorage.releaseName" . }}
+type: Opaque
+data:
+  storage_account_name: {{ $stgname | b64enc | quote }}
