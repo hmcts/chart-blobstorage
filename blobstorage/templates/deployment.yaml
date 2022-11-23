@@ -33,6 +33,7 @@ spec:
       blobEndpoint:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
         key: blobEndpoint
+
   supportsHttpsTrafficOnly: false
 
 ---
