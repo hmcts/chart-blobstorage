@@ -33,7 +33,7 @@ spec:
       blobEndpoint:
         name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
         key: blobEndpoint
-  supportsHttpsTrafficOnly: false
+  supportsHttpsTrafficOnly: {{  .Values.setup.supportsHttpsTrafficOnly | default true }}
 
 ---
 apiVersion: storage.azure.com/v1beta20210401
