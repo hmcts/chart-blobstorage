@@ -8,7 +8,6 @@ tags:
   environment: ""
 secretNameSuffix:
 setup:
-  supportsHttpsTrafficOnly: false
   containers:
    - container1
    - container2
