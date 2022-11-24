@@ -16,8 +16,10 @@ setup:
    - first-container
    - second-container
 ```
-**NOTE**: at least one container and the resource group are required for the blob storage service to provision the account and container(s) required for the application.
-
+**NOTE**: 
+    Required ResourceGroup has to be provisioned beforehand via flux. At least one container and the resource group are required for the blob storage service to provision the account and container(s) required for the application.
+     
+    
 ## Using it in your helm chart.
 To get the container(s) access key and blob service endpoint needed in your application you need to use the secrets map that is available once the storage account and container(s) are provisioned.
 
@@ -31,15 +33,15 @@ blobstorage:
       - second-container
 java:
   secrets:
-    BLOB_ACCOUNT_NAME:
+    STORAGE_ACCOUNT_NAME:
+      secretRef: storage-account-{{ .Release.Name }}
+      key: storage_account_name
+    STORAGE_URL:
       secretRef: storage-secret-{{ .Release.Name }}
-      key: storageAccountName
-    BLOB_ACCESS_KEY:
+      key: blobEndpoint
+    STORAGE_KEY:
       secretRef: storage-secret-{{ .Release.Name }}
       key: accessKey
-    BLOB_SERVICE_ENDPOINT:
-      secretRef: storage-secret-{{ .Release.Name }}
-      key: primaryBlobServiceEndPoint
 ```
 If using releaseNameOverride, secretRef will be updated as in below
 
@@ -53,15 +55,16 @@ blobstorage:
       - second-container
 java:
   secrets:
-    BLOB_ACCOUNT_NAME:
+    STORAGE_ACCOUNT_NAME:
+      secretRef: storage-account-example-release-name
+      key: storage_account_name
+    STORAGE_URL:
       secretRef: storage-secret-example-release-name
-      key: storageAccountName
-    BLOB_ACCESS_KEY:
+      key: blobEndpoint
+    STORAGE_KEY:
       secretRef: storage-secret-example-release-name
       key: accessKey
-    BLOB_SERVICE_ENDPOINT:
-      secretRef: storage-secret-example-release-name
-      key: primaryBlobServiceEndPoint
+    
 ```
 
 ## Configuration
@@ -75,7 +78,7 @@ The following table lists the configurable parameters of the Blob Storage chart 
 | `resourceGroup` | string | resource group required for the Azure deployment |  **Required** |
 | `setup` | array | see the full description of the setup objects in [setup objects](#setupobjects)| **Required** |
 | `setup.containers` | array | The names of the containers. | **Required**|
-| `setup.enableNonHttpsTraffic` | `string` |  Specify whether non-https traffic is enabled. | `disabled`|
+| `setup.supportsHttpsTrafficOnly` | `bool` |  Specify whether https traffic is only enabled. | `true`|
 | `tags.teamName`                   | string | team name used to create related Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                                        | **Required if not set through `global.`** |
 | `tags.applicationName`            | string | application name used to create necessary Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                               | **Required if not set through `global.`** |
 | `tags.builtFrom`                  | string | built from used to create necessary Azure tag. This will usually be set by Jenkins through `global.`                                                                                                                                                                                                                                     | **Required if not set through `global.`** |
