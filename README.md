@@ -17,8 +17,8 @@ setup:
    - second-container
 ```
 **NOTE**: 
-    At least one container and the resource group are required for the blob storage service to provision the account and container(s) required for the application.
-    Required ResourceGroup has to be provisioned beforehand via flux   
+    Required ResourceGroup has to be provisioned beforehand via flux and at least one container and the resource group are required for the blob storage service to provision the account and container(s) required for the application.
+     
     
 ## Using it in your helm chart.
 To get the container(s) access key and blob service endpoint needed in your application you need to use the secrets map that is available once the storage account and container(s) are provisioned.
