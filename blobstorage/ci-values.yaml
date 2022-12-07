@@ -1,5 +1,5 @@
 location: uksouth
-resourceGroup: aso-sample-rg
+resourceGroup: aso-aks-rg
 tags:
   teamName: ""
   applicationName: ""

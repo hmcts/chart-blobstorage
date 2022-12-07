@@ -15,3 +15,7 @@ app.kubernetes.io/instance: {{ template "hmcts.blobstorage.releaseName" . }}
 {{- .Release.Name | trunc 53 -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "hmcts.blobstorage.storageAccountName" -}}
+{{- include "hmcts.blobstorage.releaseName" . | sha256sum | trunc -24 -}}
+{{- end -}}

@@ -1,11 +1,10 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
-{{- $stgname := randAlphaNum 20 | lower | nospace -}}
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
-  name: {{ $stgname }}
+  name: {{ template "hmcts.blobstorage.storageAccountName" . }}
 spec:
   location:  {{ .Values.location }}
   kind: BlobStorage
@@ -42,7 +41,7 @@ metadata:
   name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" . }}
 spec:
   owner:
-    name: {{ $stgname }}
+    name: {{ template "hmcts.blobstorage.storageAccountName" . }}
 
 
 {{- range .Values.setup.containers }}
@@ -67,4 +66,4 @@ metadata:
     release: {{ template "hmcts.blobstorage.releaseName" . }}
 type: Opaque
 data:
-  storage_account_name: {{ $stgname | b64enc | quote }}
+  storage_account_name: {{ include "hmcts.blobstorage.storageAccountName" . | b64enc | quote }}
