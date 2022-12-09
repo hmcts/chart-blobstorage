@@ -16,10 +16,6 @@ app.kubernetes.io/instance: {{ template "hmcts.blobstorage.releaseName" . }}
 {{- end -}}
 {{- end -}}
 
-{{- define "hmcts.blobstorage.storageAccountSha" -}}
-{{- include "hmcts.blobstorage.releaseName" . | sha256sum -}}
-{{- end -}}
-
 {{- define "hmcts.blobstorage.storageAccountName" -}}
-{{- include "hmcts.blobstorage.storageAccountSha" . | trunc -24 -}}
+{{- include "hmcts.blobstorage.releaseName" . | sha256sum | trunc -24 -}}
 {{- end -}}

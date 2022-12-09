@@ -49,7 +49,7 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: {{ . }}
+  name: {{ template "hmcts.blobstorage.storageAccountName" $ }}-{{ . }}
 spec:
   owner:
     name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
