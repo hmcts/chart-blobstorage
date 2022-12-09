@@ -22,7 +22,7 @@ jobs:
   - template: steps/charts/validate.yaml@cnp-library
     parameters :
       chartName: blobstorage
-      chartReleaseName: chartcitest
+      chartReleaseName: chart-storage-ci
       chartNamespace: chart-tests
       helmDeleteWait: "150"
       helmInstallWait: "150"
