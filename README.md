@@ -109,7 +109,7 @@ Default configuration (e.g. default image and ingress host) is setup for sandbox
 
 ## Azure DevOps Builds
 
-Builds are run against the 'nonprod' AKS cluster.
+Builds are run against the 'cft-preview' AKS cluster. Any troubleshooting can be done within the chart-tests namespace on the cft-preview cluster.
 
 ### Pull Request Validation
 
