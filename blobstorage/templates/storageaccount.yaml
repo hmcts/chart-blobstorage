@@ -5,7 +5,7 @@ apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
   name: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
-  {{- ( include "hmcts.blobstorage.labels" . ) | indent 4 }}
+  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 spec:
   location:  {{ .Values.location }}
   kind: BlobStorage
