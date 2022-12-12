@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: v2
 description: A Helm chart to access Azure blob storage
 name: blobstorage
 # This is the chart version. This doesn't need to be incremented on every change.
@@ -11,5 +11,5 @@ keywords:
 
 dependencies:
   - name: library
-    version: 1.1.2
+    version: 1.1.4
     repository: https://hmctspublic.azurecr.io/helm/v1/repo/
