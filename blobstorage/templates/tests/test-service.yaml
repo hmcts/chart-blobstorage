@@ -54,7 +54,7 @@ spec:
         name: {{ template "hmcts.blobstorage.releaseName" . }}-storage-test-configmap
   containers:
     - name: {{ template "hmcts.blobstorage.releaseName" . }}-test-service
-      image: alpine:3.8
+      image: alpine:3.17
       volumeMounts:
         - name: configmap-volume
           mountPath: /entrypoint
