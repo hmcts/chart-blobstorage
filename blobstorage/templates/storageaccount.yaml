@@ -1,5 +1,6 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
+{{- $base := . -}}
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
@@ -52,11 +53,11 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: container-{{ template "hmcts.blobstorage.releaseName" . }}-{{ . }}
-  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
+  name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
+  {{- ( include "hmcts.labels.v2" $base ) | indent 2 }}
 spec:
   owner:
-    name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
+    name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $base }}
   azureName: {{ . }}
 {{- end }}
 
