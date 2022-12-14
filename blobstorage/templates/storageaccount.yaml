@@ -5,7 +5,7 @@
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
-  name: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
+  name: storage-account-{{ template "hmcts.releasename.v2" . }}
   {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 spec:
   location:  {{ .Values.location }}
@@ -17,7 +17,7 @@ spec:
   azureName: {{ template "hmcts.blobstorage.storageAccountName" . }}
   accessTier: Hot
   tags:
-    app.kubernetes.io_name: {{ template "hmcts.blobstorage.releaseName" . }}
+    app.kubernetes.io_name: {{ template "hmcts.releasename.v2" . }}
     helm.sh_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     application: {{ required "An application tag name (.Values.tags.applicationName) is required"  (.Values.tags.applicationName | default $tags.applicationName) }}
     builtFrom: {{ required "Repo built from (.Values.tags.builtFrom) is required" (.Values.tags.builtFrom | default $tags.builtFrom) }}
@@ -27,13 +27,13 @@ spec:
   operatorSpec:
     secrets:
       key1:
-        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        name: storage-secret-{{ template "hmcts.releasename.v2" . }}
         key: accessKey
       key2:
-        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        name: storage-secret-{{ template "hmcts.releasename.v2" . }}
         key: key2
       blobEndpoint:
-        name: storage-secret-{{ template "hmcts.blobstorage.releaseName" . }}
+        name: storage-secret-{{ template "hmcts.releasename.v2" . }}
         key: blobEndpoint
   supportsHttpsTrafficOnly: {{  .Values.setup.supportsHttpsTrafficOnly | default true }}
 
@@ -41,7 +41,7 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobService
 metadata:
-  name: blob-service-{{ template "hmcts.blobstorage.releaseName" . }}
+  name: blob-service-{{ template "hmcts.releasename.v2" . }}
   {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 spec:
   owner:
@@ -53,11 +53,11 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
+  name: container-{{ template "hmcts.releasename.v2" $base }}-{{ . }}
   {{- ( include "hmcts.labels.v2" $base ) | indent 2 }}
 spec:
   owner:
-    name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $base }}
+    name: storage-blobservice-{{ template "hmcts.releasename.v2" $base }}
   azureName: {{ . }}
 {{- end }}
 
@@ -66,7 +66,7 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
+  name: storage-account-{{ template "hmcts.releasename.v2" . }}
   namespace: {{ .Values.namespace }}
   {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 type: Opaque
