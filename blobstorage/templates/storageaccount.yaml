@@ -1,10 +1,12 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
+{{- $base := . -}}
 ---
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccount
 metadata:
-  name: {{ template "hmcts.blobstorage.storageAccountName" . }}
+  name: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
+  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 spec:
   location:  {{ .Values.location }}
   kind: BlobStorage
@@ -12,6 +14,7 @@ spec:
     name: Standard_LRS
   owner:
     name: {{ required "A resource group ( .Values.resourceGroup ) is required for storage creation" .Values.resourceGroup | quote }}
+  azureName: {{ template "hmcts.blobstorage.storageAccountName" . }}
   accessTier: Hot
   tags:
     app.kubernetes.io_name: {{ template "hmcts.blobstorage.releaseName" . }}
@@ -38,7 +41,8 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobService
 metadata:
-  name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" . }}
+  name: blob-service-{{ template "hmcts.blobstorage.releaseName" . }}
+  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 spec:
   owner:
     name: {{ template "hmcts.blobstorage.storageAccountName" . }}
@@ -49,10 +53,11 @@ spec:
 apiVersion: storage.azure.com/v1beta20210401
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: {{ template "hmcts.blobstorage.storageAccountName" $ }}-{{ . }}
+  name: container-{{ template "hmcts.blobstorage.releaseName" $base }}-{{ . }}
+  {{- ( include "hmcts.labels.v2" $base ) | indent 2 }}
 spec:
   owner:
-    name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $ }}
+    name: storage-blobservice-{{ template "hmcts.blobstorage.releaseName" $base }}
   azureName: {{ . }}
 {{- end }}
 
@@ -63,8 +68,7 @@ kind: Secret
 metadata:
   name: storage-account-{{ template "hmcts.blobstorage.releaseName" . }}
   namespace: {{ .Values.namespace }}
-  labels:
-    release: {{ template "hmcts.blobstorage.releaseName" . }}
+  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 type: Opaque
 data:
   storage_account_name: {{ include "hmcts.blobstorage.storageAccountName" . | b64enc | quote }}
