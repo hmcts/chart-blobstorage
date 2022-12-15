@@ -45,7 +45,7 @@ metadata:
   {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 spec:
   owner:
-    name: {{ template "hmcts.blobstorage.storageAccountName" . }}
+    name: storage-account-{{ template "hmcts.releasename.v2" . }}
 
 
 {{- range .Values.setup.containers }}
@@ -57,7 +57,7 @@ metadata:
   {{- ( include "hmcts.labels.v2" $base ) | indent 2 }}
 spec:
   owner:
-    name: storage-blobservice-{{ template "hmcts.releasename.v2" $base }}
+    name: blob-service-{{ template "hmcts.releasename.v2" $base }}
   azureName: {{ . }}
 {{- end }}
 
