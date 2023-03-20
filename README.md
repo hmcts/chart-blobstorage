@@ -2,7 +2,7 @@
 
 [![Build Status](https://dev.azure.com/hmcts/CNP/_apis/build/status/Helm%20Charts/chart-blobstorage)](https://dev.azure.com/hmcts/CNP/_build/latest?definitionId=62)
 
-This chart is intended for adding the azure blob storage service to the application.
+This helm chart is intended for creating an Azure Blob Storage resource for the application using [Azure Service Operator (ASO)|https://github.com/Azure/azure-service-operator]
 
 We will take small PRs and small features to this chart but more complicated needs should be handled in your own chart.
 
@@ -10,7 +10,6 @@ We will take small PRs and small features to this chart but more complicated nee
 
 ```yaml
 resourceGroup: "your application resource group"
-secretNameSuffix: "your-suffix"
 setup:
   containers:
    - first-container
