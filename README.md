@@ -33,13 +33,13 @@ blobstorage:
 java:
   secrets:
     STORAGE_ACCOUNT_NAME:
-      secretRef: storage-account-{{ .Release.Name }}
+      secretRef: storage-account-{{ .Release.Name }}-blobstorage
       key: storage_account_name
     STORAGE_URL:
-      secretRef: storage-secret-{{ .Release.Name }}
+      secretRef: storage-secret-{{ .Release.Name }}-blobstorage
       key: blobEndpoint
     STORAGE_KEY:
-      secretRef: storage-secret-{{ .Release.Name }}
+      secretRef: storage-secret-{{ .Release.Name }}-blobstorage
       key: accessKey
 ```
 If using releaseNameOverride, secretRef will be updated as in below
