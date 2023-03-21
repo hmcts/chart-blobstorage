@@ -6,6 +6,16 @@ This helm chart is intended for creating an Azure Blob Storage resource for the 
 
 We will take small PRs and small features to this chart but more complicated needs should be handled in your own chart.
 
+## Migration to v1.0 (from OSBA to ASO)
+
+### Cnp-flux-config
+* See guidance within cnp-flux-config on creating new resource group to hold ASO resources, and create this
+
+### App repository changes
+* Chart.yaml - Update the blobstorage chart version within 
+* values.preview.template.yaml - update blobstorage.resourcegroup and update secrets with new secretRef and key names
+* Jenkinsfile_CNP - update for new secret key names to be used in tests
+
 ## Example configuration
 
 ```yaml
