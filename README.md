@@ -9,12 +9,50 @@ We will take small PRs and small features to this chart but more complicated nee
 ## Migration to v1.0 (from OSBA to ASO)
 
 ### Cnp-flux-config
-* See guidance within cnp-flux-config on creating new resource group to hold ASO resources, and create this
+* Follow the guidance within cnp-flux-config on how to add a resource group for your ASO resources
 
 ### App repository changes
-* Chart.yaml - Update the blobstorage chart version within 
-* values.preview.template.yaml - update blobstorage.resourcegroup and update secrets with new secretRef and key names
-* Jenkinsfile_CNP - update for new secret key names to be used in tests
+* The resource group you created in the previous step will now follow the pattern of {namespace}-aso-{env}-rg, this will need updated in your config
+
+* There are now 2 separate secrets in the ASO version, so this will need updated within your app config
+
+Examples of the secrets in the new ASO version
+
+storage-account-{releaseName}-blobstorage
+```yaml
+apiVersion: v1
+data:
+  storage_account_name: value
+kind: Secret
+metadata:
+  name: storage-account-{releaseName}-blobstorage
+```
+
+storage-secret-{releaseName}-blobstorage
+```yaml
+apiVersion: v1
+data:
+  accessKey: value
+  blobEndpoint: value
+  key2: value
+kind: Secret
+metadata:
+  name: storage-secret-{releaseName}-blobstorage
+```
+
+The secret in the previous OSBA version had a name of the format storage-secret-{releaseName}
+
+Example of the previous OSBA secret
+```yaml
+apiVersion: v1
+data:
+  accessKey: value
+  primaryBlobServiceEndPoint: value
+  storageAccountName: value
+kind: Secret
+metadata:
+  name: storage-secret-{releaseName}
+```
 
 ## Example configuration
 
