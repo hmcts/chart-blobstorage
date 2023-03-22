@@ -9,7 +9,7 @@ We will take small PRs and small features to this chart but more complicated nee
 ## Migration to v1.0 (from OSBA to ASO)
 
 ### Cnp-flux-config
-* Follow the guidance within cnp-flux-config on how to add a resource group for your ASO resources
+* [Follow the guidance within cnp-flux-config](https://github.com/hmcts/cnp-flux-config/blob/master/docs/aso-setup-v2.md#resource-group) on how to add a resource group for your ASO resources
 
 ### App repository changes
 * The resource group you created in the previous step will now follow the pattern of {namespace}-aso-{env}-rg, this will need updated in your config
