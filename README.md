@@ -6,54 +6,6 @@ This helm chart is intended for creating an Azure Blob Storage resource for the 
 
 We will take small PRs and small features to this chart but more complicated needs should be handled in your own chart.
 
-## Migration to v1.0 (from OSBA to ASO)
-
-### Cnp-flux-config
-* [Follow the guidance within cnp-flux-config](https://github.com/hmcts/cnp-flux-config/blob/master/docs/aso-setup-v2.md#resource-group) on how to add a resource group for your ASO resources
-
-### App repository changes
-* The resource group you created in the previous step will now follow the pattern of {namespace}-aso-{env}-rg, this will need updated in your config
-
-* There are now 2 separate secrets in the ASO version, so this will need updated within your app config
-
-Examples of the secrets in the new ASO version
-
-storage-account-{releaseName}-blobstorage
-```yaml
-apiVersion: v1
-data:
-  storage_account_name: value
-kind: Secret
-metadata:
-  name: storage-account-{releaseName}-blobstorage
-```
-
-storage-secret-{releaseName}-blobstorage
-```yaml
-apiVersion: v1
-data:
-  accessKey: value
-  blobEndpoint: value
-  key2: value
-kind: Secret
-metadata:
-  name: storage-secret-{releaseName}-blobstorage
-```
-
-The secret in the previous OSBA version had a name of the format storage-secret-{releaseName}
-
-Example of the previous OSBA secret
-```yaml
-apiVersion: v1
-data:
-  accessKey: value
-  primaryBlobServiceEndPoint: value
-  storageAccountName: value
-kind: Secret
-metadata:
-  name: storage-secret-{releaseName}
-```
-
 ## Example configuration
 
 ```yaml
@@ -165,3 +117,51 @@ A build is triggered when pull requests are created. This build will run `helm l
 ### Release Build
 
 Triggered when the repository is tagged (e.g. when a release is created). Also performs linting and testing, and will publish the chart to ACR on success.
+
+## Migration to v1.0 (from OSBA to ASO)
+
+### Cnp-flux-config
+* [Follow the guidance within cnp-flux-config](https://github.com/hmcts/cnp-flux-config/blob/master/docs/aso-setup-v2.md#resource-group) on how to add a resource group for your ASO resources
+
+### App repository changes
+* The resource group you created in the previous step will now follow the pattern of {namespace}-aso-{env}-rg, this will need updated in your config
+
+* There are now 2 separate secrets in the ASO version, so this will need updated within your app config
+
+Examples of the secrets in the new ASO version
+
+storage-account-{releaseName}-blobstorage
+```yaml
+apiVersion: v1
+data:
+  storage_account_name: value
+kind: Secret
+metadata:
+  name: storage-account-{releaseName}-blobstorage
+```
+
+storage-secret-{releaseName}-blobstorage
+```yaml
+apiVersion: v1
+data:
+  accessKey: value
+  blobEndpoint: value
+  key2: value
+kind: Secret
+metadata:
+  name: storage-secret-{releaseName}-blobstorage
+```
+
+The secret in the previous OSBA version had a name of the format storage-secret-{releaseName}
+
+Example of the previous OSBA secret
+```yaml
+apiVersion: v1
+data:
+  accessKey: value
+  primaryBlobServiceEndPoint: value
+  storageAccountName: value
+kind: Secret
+metadata:
+  name: storage-secret-{releaseName}
+```
