@@ -9,7 +9,7 @@ metadata:
   {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
 spec:
   location:  {{ .Values.location }}
-  kind: BlobStorage
+  kind: StorageV2
   sku:
     name: Standard_LRS
   owner:
