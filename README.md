@@ -6,6 +6,11 @@ This helm chart is intended for creating an Azure Blob Storage resource for the 
 
 We will take small PRs and small features to this chart but more complicated needs should be handled in your own chart.
 
+## Prerequisites
+
+- To use this chart, you need a Resource Group and Service Bus namespace created.
+- Refer to [cnp-flux-config docs](https://github.com/hmcts/cnp-flux-config/blob/master/docs/aso-setup-v2.md#resource-group) for setting up resource group.
+
 ## Example configuration
 
 ```yaml
@@ -15,9 +20,6 @@ setup:
    - first-container
    - second-container
 ```
-**NOTE**: 
-    Required ResourceGroup has to be provisioned beforehand via flux. At least one container and the resource group are required for the blob storage service to provision the account and container(s) required for the application.
-     
     
 ## Using it in your helm chart.
 To get the container(s) access key and blob service endpoint needed in your application you need to use the secrets map that is available once the storage account and container(s) are provisioned.
@@ -121,7 +123,7 @@ Triggered when the repository is tagged (e.g. when a release is created). Also p
 ## Migration to v1.0 (from OSBA to ASO)
 
 ### Cnp-flux-config
-* [Follow the guidance within cnp-flux-config](https://github.com/hmcts/cnp-flux-config/blob/master/docs/aso-setup-v2.md#resource-group) on how to add a resource group for your ASO resources
+* Finish [prerequisites](#prerequisites)
 
 ### App repository changes
 * The resource group you created in the previous step will now follow the pattern of {namespace}-aso-{env}-rg, this will need updated in your config
