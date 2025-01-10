@@ -9,19 +9,18 @@ AKS_CLUSTER := cnp-aks-sandbox-cluster
 
 setup:
 	az configure --defaults acr=${ACR}
-	az acr login --name ${ACR}
-    helm registry login ${ACR}.azurecr.io
+	az acr helm repo add
 	az aks get-credentials --resource-group ${AKS_RESOURCE_GROUP} --name ${AKS_CLUSTER}
 
 clean:
-    -helm uninstall ${RELEASE}
+	-helm delete --purge ${RELEASE}
 	-kubectl delete pod ${TEST} -n ${NAMESPACE}
 
 lint:
 	helm lint ${CHART}
 
 deploy:
-    helm install ${RELEASE} oci://${ACR}.azurecr.io/helm/${CHART} --namespace ${NAMESPACE} -f ci-values.yaml --wait --timeout 60s
+	helm install ${CHART} --name ${RELEASE} --namespace ${NAMESPACE} -f ci-values.yaml --wait --timeout 60
 
 test:
 	helm test ${RELEASE}
