@@ -9,11 +9,12 @@ AKS_CLUSTER := cnp-aks-sandbox-cluster
 
 setup:
 	az configure --defaults acr=${ACR}
-	az acr helm repo add
+	az acr login --name ${ACR}
+    helm registry login ${ACR}.azurecr.io
 	az aks get-credentials --resource-group ${AKS_RESOURCE_GROUP} --name ${AKS_CLUSTER}
 
 clean:
-	-helm delete --purge ${RELEASE}
+    -helm uninstall ${RELEASE}
 	-kubectl delete pod ${TEST} -n ${NAMESPACE}
 
 lint:
