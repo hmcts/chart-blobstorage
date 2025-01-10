@@ -21,7 +21,7 @@ lint:
 	helm lint ${CHART}
 
 deploy:
-	helm install ${CHART} --name ${RELEASE} --namespace ${NAMESPACE} -f ci-values.yaml --wait --timeout 60
+    helm install ${RELEASE} oci://${ACR}.azurecr.io/helm/${CHART} --namespace ${NAMESPACE} -f ci-values.yaml --wait --timeout 60s
 
 test:
 	helm test ${RELEASE}
