@@ -36,6 +36,8 @@ spec:
         name: storage-secret-{{ template "hmcts.releasename.v2" . }}
         key: blobEndpoint
   supportsHttpsTrafficOnly: {{  .Values.setup.supportsHttpsTrafficOnly | default true }}
+  isSftpEnabled: {{  .Values.setup.isSftpEnabled | default false }}
+  isHnsEnabled: {{  .Values.setup.isHnsEnabled | default false }}
 
 ---
 apiVersion: storage.azure.com/v1api20210401
