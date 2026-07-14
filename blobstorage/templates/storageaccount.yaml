@@ -1,6 +1,9 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
 {{- $base := . -}}
+{{- if and $setup.isSftpEnabled (not $setup.isHnsEnabled) -}}
+{{- fail "setup.isHnsEnabled must be true when setup.isSftpEnabled is true" -}}
+{{- end -}}
 ---
 apiVersion: storage.azure.com/v1api20210401
 kind: StorageAccount
