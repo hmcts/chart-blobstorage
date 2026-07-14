@@ -1,7 +1,8 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
 {{- $base := . -}}
-{{- if and $setup.isSftpEnabled (not $setup.isHnsEnabled) -}}
+{{- $setup := .Values.setup | default dict -}}
+{{- if and ($setup.isSftpEnabled | default false) (not ($setup.isHnsEnabled | default false)) -}}
 {{- fail "setup.isHnsEnabled must be true when setup.isSftpEnabled is true" -}}
 {{- end -}}
 ---
