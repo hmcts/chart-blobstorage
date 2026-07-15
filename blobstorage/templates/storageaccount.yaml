@@ -6,7 +6,7 @@
 {{- fail "setup.isHnsEnabled must be true when setup.isSftpEnabled is true" -}}
 {{- end -}}
 ---
-apiVersion: storage.azure.com/v1api20210401
+apiVersion: storage.azure.com/v20250601
 kind: StorageAccount
 metadata:
   name: storage-account-{{ template "hmcts.releasename.v2" . }}
@@ -44,7 +44,7 @@ spec:
   isHnsEnabled: {{  .Values.setup.isHnsEnabled | default false }}
 
 ---
-apiVersion: storage.azure.com/v1api20210401
+apiVersion: storage.azure.com/v20250601
 kind: StorageAccountsBlobService
 metadata:
   name: blob-service-{{ template "hmcts.releasename.v2" . }}
@@ -56,7 +56,7 @@ spec:
 
 {{- range .Values.setup.containers }}
 ---
-apiVersion: storage.azure.com/v1api20210401
+apiVersion: storage.azure.com/v20250601
 kind: StorageAccountsBlobServicesContainer
 metadata:
   name: container-{{ template "hmcts.releasename.v2" $base }}-{{ . }}
