@@ -26,6 +26,7 @@ jobs:
       chartNamespace: chart-tests
       helmDeleteWait: "150"
       helmInstallWait: "150"
+      kubeconformValuesFile: ci-values-minimal.yaml
 
 - job: Release
   # Make sure we have a tag to run this job
