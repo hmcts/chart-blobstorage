@@ -1,3 +1,3 @@
 {{- define "hmcts.blobstorage.storageAccountName" -}}
-{{- include "hmcts.releasename.v2" . | sha256sum | trunc -24 -}}
+{{- .Values.azureName | default (include "hmcts.releasename.v2" . | sha256sum | trunc -24) | trim -}}
 {{- end -}}
