@@ -14,7 +14,7 @@ resources:
     type: github
     name: hmcts/cnp-azuredevops-libraries
     endpoint: 'hmcts'
-    ref: refs/heads/helm_v4_validation
+    ref: refs/heads/master
 
 jobs:
 - job: Validate
