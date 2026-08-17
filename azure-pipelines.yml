@@ -7,12 +7,14 @@ pr:
   branches:
     include:
     - master
+
 resources:
   repositories:
   - repository: cnp-azuredevops-libraries
     type: github
     name: hmcts/cnp-azuredevops-libraries
     endpoint: 'hmcts'
+    ref: refs/heads/helm_v4_validation
 
 jobs:
 - job: Validate
