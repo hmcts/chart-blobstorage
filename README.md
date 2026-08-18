@@ -20,7 +20,7 @@ setup:
    - first-container
    - second-container
 ```
-    
+
 ## Using it in your helm chart.
 To get the container(s) access key and blob service endpoint needed in your application you need to use the secrets map that is available once the storage account and container(s) are provisioned.
 
@@ -65,7 +65,7 @@ java:
     STORAGE_KEY:
       secretRef: storage-secret-example-release-name
       key: accessKey
-    
+
 ```
 
 ## Configuration
@@ -105,6 +105,31 @@ Default configuration (e.g. default image and ingress host) is setup for sandbox
 - For local development see the `Makefile` for available targets.
 - To execute an end-to-end build, deploy and test run `make`.
 - to clean up deployed releases, charts, test pods and local charts, run `make clean`
+
+### Local Lint and Unit Tests
+
+Use test-only values to satisfy required chart fields without changing chart defaults.
+
+```bash
+helm lint blobstorage -f blobstorage/tests/values/lint-values.yaml
+```
+
+Run unit tests (helm-unittest plugin required):
+
+```bash
+helm unittest blobstorage -f 'tests/unit-tests/*.yaml'
+```
+
+Run kubeconform with chart test values:
+
+```bash
+helm template chart-storage-ci ./blobstorage \
+  -f ci-values.yaml \
+  -f blobstorage/tests/values/lint-values.yaml \
+| kubeconform -strict -summary \
+  -schema-location default \
+  -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+```
 
 `helm test` will deploy a busybox container alongside the release which performs a simple HTTP "list containers" request against the blobstorage account endpoint. If it doesn't return `HTTP 200` the test will fail. **NOTE:** it does NOT run with `--cleanup` so the test pod will be available for inspection.
 

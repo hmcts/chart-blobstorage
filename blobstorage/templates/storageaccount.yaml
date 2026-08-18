@@ -1,6 +1,12 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
 {{- $base := . -}}
+{{- $supportsHttpsTrafficOnly := true -}}
+{{- if hasKey .Values "setup" -}}
+{{- if hasKey .Values.setup "supportsHttpsTrafficOnly" -}}
+{{- $supportsHttpsTrafficOnly = .Values.setup.supportsHttpsTrafficOnly -}}
+{{- end -}}
+{{- end -}}
 ---
 apiVersion: storage.azure.com/v1api20210401
 kind: StorageAccount
@@ -35,7 +41,7 @@ spec:
       blobEndpoint:
         name: storage-secret-{{ template "hmcts.releasename.v3" . }}
         key: blobEndpoint
-  supportsHttpsTrafficOnly: {{  .Values.setup.supportsHttpsTrafficOnly | default true }}
+  supportsHttpsTrafficOnly: {{ $supportsHttpsTrafficOnly }}
 
 ---
 apiVersion: storage.azure.com/v1api20210401
