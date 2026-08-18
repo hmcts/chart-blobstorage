@@ -5,6 +5,10 @@ values:
   - ../../../ci-values-minimal.yaml
 tests:
   - it: renders one container by default
+    set:
+      setup:
+        containers:
+          - container
     asserts:
       - hasDocuments:
           count: 4

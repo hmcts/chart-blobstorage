@@ -5,6 +5,10 @@ values:
   - ../../../ci-values-minimal.yaml
 tests:
   - it: renders expected core resources
+    set:
+      setup:
+        containers:
+          - container
     asserts:
       - hasDocuments:
           count: 4
@@ -49,6 +53,10 @@ tests:
         documentIndex: 0
 
   - it: writes storage secret in expected namespace
+    set:
+      setup:
+        containers:
+          - container
     asserts:
       - equal:
           path: metadata.namespace
