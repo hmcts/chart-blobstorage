@@ -4,7 +4,7 @@ templates:
 values:
   - ../../../ci-values-minimal.yaml
 tests:
-  - it: renders configmap and pod hook resources
+  - it: renders configmap and job hook resources
     asserts:
       - hasDocuments:
           count: 2
@@ -12,38 +12,38 @@ tests:
           of: ConfigMap
         documentIndex: 0
       - isKind:
-          of: Pod
+          of: Job
         documentIndex: 1
 
-  - it: marks pod as helm test hook
+  - it: marks job as helm test hook
     asserts:
       - equal:
           path: metadata.annotations["helm.sh/hook"]
           value: test-success
         documentIndex: 1
       - equal:
-          path: spec.restartPolicy
+          path: spec.template.spec.restartPolicy
           value: Never
         documentIndex: 1
 
   - it: reads access values from expected storage secret keys
     asserts:
       - equal:
-          path: spec.containers[0].env[1].valueFrom.secretKeyRef.key
+          path: spec.template.spec.containers[0].env[1].valueFrom.secretKeyRef.key
           value: blobEndpoint
         documentIndex: 1
       - equal:
-          path: spec.containers[0].env[2].valueFrom.secretKeyRef.key
+          path: spec.template.spec.containers[0].env[2].valueFrom.secretKeyRef.key
           value: accessKey
         documentIndex: 1
 
   - it: executes expected test entrypoint command
     asserts:
       - equal:
-          path: spec.containers[0].command[0]
+          path: spec.template.spec.containers[0].command[0]
           value: sh
         documentIndex: 1
       - matchRegex:
-          path: spec.containers[0].command[2]
+          path: spec.template.spec.containers[0].command[2]
           pattern: "/entrypoint/entrypoint.sh"
         documentIndex: 1

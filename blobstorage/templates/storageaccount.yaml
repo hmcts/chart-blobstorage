@@ -1,11 +1,16 @@
 {{- $globals := .Values.global | default dict -}}
 {{- $tags := $globals.tags | default dict -}}
 {{- $base := . -}}
-{{- $supportsHttpsTrafficOnly := true -}}
-{{- if hasKey .Values "setup" -}}
-{{- if hasKey .Values.setup "supportsHttpsTrafficOnly" -}}
-{{- $supportsHttpsTrafficOnly = .Values.setup.supportsHttpsTrafficOnly -}}
+{{- $setup := .Values.setup | default dict -}}
+{{- if not (kindIs "map" $setup) -}}
+{{- fail "setup must be a map/object" -}}
 {{- end -}}
+{{- if and ($setup.isSftpEnabled | default false) (not ($setup.isHnsEnabled | default false)) -}}
+{{- fail "setup.isHnsEnabled must be true when setup.isSftpEnabled is true" -}}
+{{- end -}}
+{{- $supportsHttpsTrafficOnly := true -}}
+{{- if hasKey $setup "supportsHttpsTrafficOnly" -}}
+{{- $supportsHttpsTrafficOnly = $setup.supportsHttpsTrafficOnly -}}
 {{- end -}}
 ---
 apiVersion: storage.azure.com/v1api20210401

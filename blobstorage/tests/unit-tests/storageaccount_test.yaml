@@ -128,6 +128,15 @@ tests:
           value: aat
         documentIndex: 0
 
+  - it: uses azureName override when provided
+    set:
+      azureName: customstorageacct
+    asserts:
+      - equal:
+          path: spec.azureName
+          value: customstorageacct
+        documentIndex: 0
+
   - it: fails when resourceGroup is missing
     set:
       resourceGroup: ""
@@ -148,3 +157,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: An application tag name (.Values.tags.applicationName) is required
+
+  - it: fails when sftp enabled without hns
+    set:
+      setup:
+        isSftpEnabled: true
+        isHnsEnabled: false
+    asserts:
+      - failedTemplate:
+          errorMessage: setup.isHnsEnabled must be true when setup.isSftpEnabled is true
