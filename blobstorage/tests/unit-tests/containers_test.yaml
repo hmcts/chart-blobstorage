@@ -2,7 +2,7 @@ suite: container template tests
 templates:
   - templates/storageaccount.yaml
 values:
-  - ../values/lint-values.yaml
+  - ../../../ci-values-minimal.yaml
 tests:
   - it: renders one container by default
     asserts:

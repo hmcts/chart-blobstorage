@@ -2,7 +2,7 @@ suite: helm test hook template tests
 templates:
   - templates/tests/test-service.yaml
 values:
-  - ../values/lint-values.yaml
+  - ../../../ci-values-minimal.yaml
 tests:
   - it: renders configmap and pod hook resources
     asserts:

@@ -111,7 +111,7 @@ Default configuration (e.g. default image and ingress host) is setup for sandbox
 Use test-only values to satisfy required chart fields without changing chart defaults.
 
 ```bash
-helm lint blobstorage -f blobstorage/tests/values/lint-values.yaml
+helm lint blobstorage -f ci-values-minimal.yaml
 ```
 
 Run unit tests (helm-unittest plugin required):
@@ -125,7 +125,7 @@ Run kubeconform with chart test values:
 ```bash
 helm template chart-storage-ci ./blobstorage \
   -f ci-values.yaml \
-  -f blobstorage/tests/values/lint-values.yaml \
+  -f ci-values-minimal.yaml \
 | kubeconform -strict -summary \
   -schema-location default \
   -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
