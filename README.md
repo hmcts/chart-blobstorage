@@ -131,9 +131,32 @@ and testing.
 - To execute an end-to-end build, deploy and test run `make`.
 - to clean up deployed releases, charts, test pods and local charts, run `make clean`
 
-`helm test` will deploy a busybox container alongside the release which performs a simple HTTP "list containers" request
-against the blobstorage account endpoint. If it doesn't return `HTTP 200` the test will fail. **NOTE:** it does NOT run
-with `--cleanup` so the test pod will be available for inspection.
+### Local Lint and Unit Tests
+
+Use test-only values to satisfy required chart fields without changing chart defaults.
+
+```bash
+helm lint blobstorage -f ci-values-minimal.yaml
+```
+
+Run unit tests (helm-unittest plugin required):
+
+```bash
+helm unittest blobstorage -f 'tests/unit-tests/*.yaml'
+```
+
+Run kubeconform with chart test values:
+
+```bash
+helm template chart-storage-ci ./blobstorage \
+  -f ci-values.yaml \
+  -f ci-values-minimal.yaml \
+| kubeconform -strict -summary \
+  -schema-location default \
+  -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+```
+
+`helm test` will deploy a busybox container alongside the release which performs a simple HTTP "list containers" request against the blobstorage account endpoint. If it doesn't return `HTTP 200` the test will fail. **NOTE:** it does NOT run with `--cleanup` so the test pod will be available for inspection.
 
 ## Azure DevOps Builds
 

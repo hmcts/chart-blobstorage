@@ -1,0 +1,9 @@
+# Fed into: kubeconform
+namespace: chart-tests # required by the Secret resource
+resourceGroup: test-rg # required by StorageAccount owner ref
+global:
+  tags: # required fields — storageaccount.yaml uses required() on all of these
+    applicationName: test-app
+    builtFrom: https://github.com/hmcts/chart-blobstorage
+    businessArea: CFT
+    environment: development

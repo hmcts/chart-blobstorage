@@ -2,15 +2,22 @@
 {{- $tags := $globals.tags | default dict -}}
 {{- $base := . -}}
 {{- $setup := .Values.setup | default dict -}}
+{{- if not (kindIs "map" $setup) -}}
+{{- fail "setup must be a map/object" -}}
+{{- end -}}
 {{- if and ($setup.isSftpEnabled | default false) (not ($setup.isHnsEnabled | default false)) -}}
 {{- fail "setup.isHnsEnabled must be true when setup.isSftpEnabled is true" -}}
+{{- end -}}
+{{- $supportsHttpsTrafficOnly := true -}}
+{{- if hasKey $setup "supportsHttpsTrafficOnly" -}}
+{{- $supportsHttpsTrafficOnly = $setup.supportsHttpsTrafficOnly -}}
 {{- end -}}
 ---
 apiVersion: storage.azure.com/v1api20230101
 kind: StorageAccount
 metadata:
-  name: storage-account-{{ template "hmcts.releasename.v2" . }}
-  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
+  name: storage-account-{{ template "hmcts.releasename.v3" . }}
+  {{- ( include "hmcts.labels.v3" . ) | indent 2 }}
 spec:
   location:  {{ .Values.location }}
   kind: StorageV2
@@ -21,7 +28,7 @@ spec:
   azureName: {{ template "hmcts.blobstorage.storageAccountName" . }}
   accessTier: Hot
   tags:
-    app.kubernetes.io_name: {{ template "hmcts.releasename.v2" . }}
+    app.kubernetes.io_name: {{ template "hmcts.releasename.v3" . }}
     helm.sh_chart: {{ .Chart.Name }}-{{ .Chart.Version }}
     application: {{ required "An application tag name (.Values.tags.applicationName) is required"  (.Values.tags.applicationName | default $tags.applicationName) }}
     builtFrom: {{ required "Repo built from (.Values.tags.builtFrom) is required" (.Values.tags.builtFrom | default $tags.builtFrom) }}
@@ -31,15 +38,15 @@ spec:
   operatorSpec:
     secrets:
       key1:
-        name: storage-secret-{{ template "hmcts.releasename.v2" . }}
+        name: storage-secret-{{ template "hmcts.releasename.v3" . }}
         key: accessKey
       key2:
-        name: storage-secret-{{ template "hmcts.releasename.v2" . }}
+        name: storage-secret-{{ template "hmcts.releasename.v3" . }}
         key: key2
       blobEndpoint:
-        name: storage-secret-{{ template "hmcts.releasename.v2" . }}
+        name: storage-secret-{{ template "hmcts.releasename.v3" . }}
         key: blobEndpoint
-  supportsHttpsTrafficOnly: {{  .Values.setup.supportsHttpsTrafficOnly | default true }}
+  supportsHttpsTrafficOnly: {{ $supportsHttpsTrafficOnly }}
   isSftpEnabled: {{  .Values.setup.isSftpEnabled | default false }}
   isHnsEnabled: {{  .Values.setup.isHnsEnabled | default false }}
 
@@ -47,11 +54,11 @@ spec:
 apiVersion: storage.azure.com/v1api20230101
 kind: StorageAccountsBlobService
 metadata:
-  name: blob-service-{{ template "hmcts.releasename.v2" . }}
-  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
+  name: blob-service-{{ template "hmcts.releasename.v3" . }}
+  {{- ( include "hmcts.labels.v3" . ) | indent 2 }}
 spec:
   owner:
-    name: storage-account-{{ template "hmcts.releasename.v2" . }}
+    name: storage-account-{{ template "hmcts.releasename.v3" . }}
 
 
 {{- range .Values.setup.containers }}
@@ -59,11 +66,11 @@ spec:
 apiVersion: storage.azure.com/v1api20230101
 kind: StorageAccountsBlobServicesContainer
 metadata:
-  name: container-{{ template "hmcts.releasename.v2" $base }}-{{ . }}
-  {{- ( include "hmcts.labels.v2" $base ) | indent 2 }}
+  name: container-{{ template "hmcts.releasename.v3" $base }}-{{ . }}
+  {{- ( include "hmcts.labels.v3" $base ) | indent 2 }}
 spec:
   owner:
-    name: blob-service-{{ template "hmcts.releasename.v2" $base }}
+    name: blob-service-{{ template "hmcts.releasename.v3" $base }}
   azureName: {{ . }}
 {{- end }}
 
@@ -72,9 +79,9 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: storage-account-{{ template "hmcts.releasename.v2" . }}
+  name: storage-account-{{ template "hmcts.releasename.v3" . }}
   namespace: {{ .Values.namespace }}
-  {{- ( include "hmcts.labels.v2" . ) | indent 2 }}
+  {{- ( include "hmcts.labels.v3" . ) | indent 2 }}
 type: Opaque
 data:
   storage_account_name: {{ include "hmcts.blobstorage.storageAccountName" . | b64enc | quote }}

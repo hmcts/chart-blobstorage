@@ -7,12 +7,14 @@ pr:
   branches:
     include:
     - master
+
 resources:
   repositories:
   - repository: cnp-azuredevops-libraries
     type: github
     name: hmcts/cnp-azuredevops-libraries
     endpoint: 'hmcts'
+    ref: refs/heads/master
 
 jobs:
 - job: Validate
@@ -26,6 +28,9 @@ jobs:
       chartNamespace: chart-tests
       helmDeleteWait: "150"
       helmInstallWait: "150"
+      kubeconformValuesFile: ci-values-minimal.yaml
+      runUnitTests: true
+      helmUnittestValuesFile: ci-values-minimal.yaml
 
 - job: Release
   # Make sure we have a tag to run this job

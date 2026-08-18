@@ -1,0 +1,168 @@
+suite: storageaccount template tests
+templates:
+  - templates/storageaccount.yaml
+values:
+  - ../../../ci-values-minimal.yaml
+tests:
+  - it: renders expected core resources
+    set:
+      setup:
+        containers:
+          - container
+    asserts:
+      - hasDocuments:
+          count: 4
+      - isKind:
+          of: StorageAccount
+        documentIndex: 0
+      - isKind:
+          of: StorageAccountsBlobService
+        documentIndex: 1
+      - isKind:
+          of: StorageAccountsBlobServicesContainer
+        documentIndex: 2
+      - isKind:
+          of: Secret
+        documentIndex: 3
+
+  - it: sets required storage account fields
+    asserts:
+      - equal:
+          path: spec.owner.name
+          value: test-rg
+        documentIndex: 0
+      - equal:
+          path: spec.location
+          value: uksouth
+        documentIndex: 0
+      - equal:
+          path: spec.supportsHttpsTrafficOnly
+          value: true
+        documentIndex: 0
+      - equal:
+          path: spec.tags.application
+          value: test-app
+        documentIndex: 0
+      - equal:
+          path: spec.tags.businessArea
+          value: CFT
+        documentIndex: 0
+      - equal:
+          path: spec.tags.environment
+          value: development
+        documentIndex: 0
+
+  - it: writes storage secret in expected namespace
+    set:
+      setup:
+        containers:
+          - container
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: chart-tests
+        documentIndex: 3
+      - isNotEmpty:
+          path: data.storage_account_name
+        documentIndex: 3
+
+  - it: uses global tags when local tags are empty
+    set:
+      tags:
+        applicationName: ""
+        builtFrom: ""
+        businessArea: ""
+        environment: ""
+      global:
+        tags:
+          applicationName: global-app
+          builtFrom: https://example.invalid/global
+          businessArea: GLOBAL
+          environment: prod
+    asserts:
+      - equal:
+          path: spec.tags.application
+          value: global-app
+        documentIndex: 0
+      - equal:
+          path: spec.tags.builtFrom
+          value: https://example.invalid/global
+        documentIndex: 0
+      - equal:
+          path: spec.tags.businessArea
+          value: GLOBAL
+        documentIndex: 0
+      - equal:
+          path: spec.tags.environment
+          value: prod
+        documentIndex: 0
+
+  - it: prefers local tags over global tags
+    set:
+      tags:
+        applicationName: local-app
+        builtFrom: https://example.invalid/local
+        businessArea: LOCAL
+        environment: aat
+      global:
+        tags:
+          applicationName: global-app
+          builtFrom: https://example.invalid/global
+          businessArea: GLOBAL
+          environment: prod
+    asserts:
+      - equal:
+          path: spec.tags.application
+          value: local-app
+        documentIndex: 0
+      - equal:
+          path: spec.tags.builtFrom
+          value: https://example.invalid/local
+        documentIndex: 0
+      - equal:
+          path: spec.tags.businessArea
+          value: LOCAL
+        documentIndex: 0
+      - equal:
+          path: spec.tags.environment
+          value: aat
+        documentIndex: 0
+
+  - it: uses azureName override when provided
+    set:
+      azureName: customstorageacct
+    asserts:
+      - equal:
+          path: spec.azureName
+          value: customstorageacct
+        documentIndex: 0
+
+  - it: fails when resourceGroup is missing
+    set:
+      resourceGroup: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: A resource group ( .Values.resourceGroup ) is required for storage creation
+
+  - it: fails when applicationName missing in local and global tags
+    set:
+      tags:
+        applicationName: ""
+        builtFrom: https://example.invalid/local
+        businessArea: CFT
+        environment: development
+      global:
+        tags:
+          applicationName: ""
+    asserts:
+      - failedTemplate:
+          errorMessage: An application tag name (.Values.tags.applicationName) is required
+
+  - it: fails when sftp enabled without hns
+    set:
+      setup:
+        isSftpEnabled: true
+        isHnsEnabled: false
+    asserts:
+      - failedTemplate:
+          errorMessage: setup.isHnsEnabled must be true when setup.isSftpEnabled is true

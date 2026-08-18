@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "hmcts.releasename.v2" . }}-storage-test-configmap
+  name: {{ template "hmcts.releasename.v3" . }}-storage-test-configmap
 data:
   entrypoint.sh: |-
     #!/bin/sh
@@ -40,36 +40,38 @@ data:
 
     [ "$httpstatuscode" = "200" ] && exit 0 || exit 1
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: batch/v1
+kind: Job
 metadata:
-  name: "{{ template "hmcts.releasename.v2" . }}-test-service"
+  name: "{{ template "hmcts.releasename.v3" . }}-test-service"
   annotations:
     "helm.sh/hook": test-success
 spec:
-  volumes:
-    - name: configmap-volume
-      configMap:
-        defaultMode: 0755
-        name: {{ template "hmcts.releasename.v2" . }}-storage-test-configmap
-  containers:
-    - name: {{ template "hmcts.releasename.v2" . }}-test-service
-      image: alpine:3.17
-      volumeMounts:
+  template:
+    spec:
+      volumes:
         - name: configmap-volume
-          mountPath: /entrypoint
-      env:
-        - name: SERVICE_NAME
-          value: {{ template "hmcts.releasename.v2" . }}
-        - name: STORAGE_ACCOUNT_NAME
-          valueFrom:
-            secretKeyRef:
-              name: storage-secret-{{ template "hmcts.releasename.v2" . }}
-              key: blobEndpoint
-        - name: ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: storage-secret-{{ template "hmcts.releasename.v2" . }}
-              key: accessKey
-      command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /entrypoint/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
-  restartPolicy: Never
+          configMap:
+            defaultMode: 0755
+            name: {{ template "hmcts.releasename.v3" . }}-storage-test-configmap
+      containers:
+        - name: {{ template "hmcts.releasename.v3" . }}-test-service
+          image: alpine:3.17
+          volumeMounts:
+            - name: configmap-volume
+              mountPath: /entrypoint
+          env:
+            - name: SERVICE_NAME
+              value: {{ template "hmcts.releasename.v3" . }}
+            - name: STORAGE_ACCOUNT_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: storage-secret-{{ template "hmcts.releasename.v3" . }}
+                  key: blobEndpoint
+            - name: ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: storage-secret-{{ template "hmcts.releasename.v3" . }}
+                  key: accessKey
+          command: ["sh", "-c", "apk add --update --no-cache openssl openssl-dev ca-certificates && /entrypoint/entrypoint.sh ${STORAGE_ACCOUNT_NAME} ${ACCESS_KEY}"]
+      restartPolicy: Never

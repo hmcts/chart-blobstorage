@@ -8,4 +8,4 @@ tags:
   environment:
 setup:
   containers:
-   - container
+    - container
