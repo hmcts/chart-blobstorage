@@ -1,0 +1,58 @@
+suite: container template tests
+templates:
+  - templates/storageaccount.yaml
+values:
+  - ../values/lint-values.yaml
+tests:
+  - it: renders one container by default
+    asserts:
+      - hasDocuments:
+          count: 4
+
+  - it: renders multiple containers when provided
+    set:
+      setup:
+        containers:
+          - first
+          - second
+          - third
+    asserts:
+      - hasDocuments:
+          count: 6
+      - equal:
+          path: spec.azureName
+          value: first
+        documentIndex: 2
+      - equal:
+          path: spec.azureName
+          value: second
+        documentIndex: 3
+      - equal:
+          path: spec.azureName
+          value: third
+        documentIndex: 4
+
+  - it: allows turning off https-only setting
+    set:
+      setup:
+        supportsHttpsTrafficOnly: false
+    asserts:
+      - equal:
+          path: spec.supportsHttpsTrafficOnly
+          value: false
+        documentIndex: 0
+
+  - it: renders no container resources when container list is empty
+    set:
+      setup:
+        containers: []
+    asserts:
+      - hasDocuments:
+          count: 3
+
+  - it: keeps blob service owner reference aligned to storage account
+    asserts:
+      - equal:
+          path: spec.owner.name
+          value: storage-account-release-name-blobstorage
+        documentIndex: 1
