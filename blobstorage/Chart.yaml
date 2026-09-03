@@ -11,5 +11,5 @@ keywords:
 
 dependencies:
   - name: library
-    version: 2.3.0
+    version: 2.3.1
     repository: oci://hmctsprod.azurecr.io/helm
