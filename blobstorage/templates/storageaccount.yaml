@@ -68,6 +68,8 @@ kind: StorageAccountsBlobServicesContainer
 metadata:
   name: container-{{ template "hmcts.releasename.v3" $base }}-{{ . }}
   {{- ( include "hmcts.labels.v3" $base ) | indent 2 }}
+  annotations:
+    serviceoperator.azure.com/reconcile-policy: detach-on-delete
 spec:
   owner:
     name: blob-service-{{ template "hmcts.releasename.v3" $base }}
